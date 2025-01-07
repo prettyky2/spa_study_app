@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">spa_study_app</string>
+    <string name="app_name">spa_study_app_250105</string>
+    <string name="app_title">SPA Practice</string>
+    <string name="start_button">START</string>
 </resources>
