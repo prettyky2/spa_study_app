@@ -21,6 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainPageActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+
     </application>
 
 </manifest>
