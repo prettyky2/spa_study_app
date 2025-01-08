@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Spa_study_app"
-        tools:targetApi="31">
+        tools:targetApi="34">
         <activity
             android:name=".LoadingActivity"
             android:exported="true">
@@ -27,6 +27,49 @@
             android:exported="true"
             android:theme="@style/Theme.Spa_study_app">
         </activity>
+
+        <activity
+            android:name=".DailyWordPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".DailyStudyPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".DailyTestPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".GrammarTestPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".SpaTestPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     </application>

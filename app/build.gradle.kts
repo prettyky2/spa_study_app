@@ -40,4 +40,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.poi)
+    implementation(libs.poi.ooxml)
+    implementation(libs.commons.collections4)
+    implementation(libs.xmlbeans)
 }
