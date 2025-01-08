@@ -1,6 +1,5 @@
 package com.example.myapp;
 
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -41,18 +40,11 @@ public class LoadingActivity extends AppCompatActivity implements View.OnClickLi
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
+        }); //setContentView
 
-        //initialize object
-        startButton = findViewById(R.id.loading_page_start_button);
-        startButton.setOnClickListener(this);
-        startButton.setVisibility(View.GONE);
-
-        progressBar = findViewById(R.id.loading_progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-
-        initializeExcelFile();
-        loadExcelFile();
+        initializeClass(); //set button, text, progress bar, etc
+        initializeExcelFile(); //initialize excel file
+        loadExcelFile(); //load excel file
 
 
     } //onCreate();
@@ -66,9 +58,19 @@ public class LoadingActivity extends AppCompatActivity implements View.OnClickLi
         }
     } //onClick();
 
+    private void initializeClass() {
+        //initialize object
+        startButton = findViewById(R.id.loading_page_start_button);
+        startButton.setOnClickListener(this);
+        startButton.setVisibility(View.GONE);
+
+        progressBar = findViewById(R.id.loading_progressBar);
+        progressBar.setVisibility(View.GONE);
+    } //initializeClass()
 
     private void initializeExcelFile() {
         try {
+            progressBar.setVisibility(View.VISIBLE);
             // 앱 전용 디렉토리 경로
             File file = new File(getExternalFilesDir(null), "daily_word.xlsx");
 
@@ -91,14 +93,15 @@ public class LoadingActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "엑셀 파일이 이미 존재합니다", Toast.LENGTH_SHORT).show();
                 Log.d("FileCheck", "Existing file size: " + file.length());
             }
+            progressBar.setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "엑셀 파일 초기화 실패", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "엑셀 파일 초기화 실패", Toast.LENGTH_SHORT).show();
         }
-    }
+    } //initializeExcelFile()
 
     private void loadExcelFile() {
+        progressBar.setVisibility(View.VISIBLE);
         try {
             File file = new File(getExternalFilesDir(null), "daily_word.xlsx");
             if (!file.exists()) {
@@ -127,13 +130,13 @@ public class LoadingActivity extends AppCompatActivity implements View.OnClickLi
             inputStream.close();
 
             Toast.makeText(this, "엑셀 파일 로드 완료", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE); // 로드 완료 후 숨김
+            progressBar.setVisibility(View.GONE);
             startButton.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             Log.e("ExcelReader", "Error while loading Excel file", e);
             Toast.makeText(this, "엑셀 파일 로드 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }
+    } //loadExcelFile()
 
 
 }

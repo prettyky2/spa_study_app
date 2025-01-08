@@ -34,6 +34,44 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
+        <activity
+            android:name=".DailyStudyPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".DailyTestPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".GrammarTestPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
+            android:name=".SpaTestPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </application>
 
 </manifest>

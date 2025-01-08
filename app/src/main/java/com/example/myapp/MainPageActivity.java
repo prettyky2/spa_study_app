@@ -30,8 +30,35 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
+        }); //setContentView
 
+        initializeClass(); // set button, text, progress bar, onClickListener etc
+
+
+
+    } //onCreate();
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.main_page_sub_title_daily_word) {
+            Intent intent = new Intent(this, DailyWordPage.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.main_page_sub_title_daily_study) {
+            Intent intent = new Intent(this, DailyStudyPage.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.main_page_sub_title_daily_test) {
+            Intent intent = new Intent(this, DailyTestPage.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.main_page_sub_title_grammar_test) {
+            Intent intent = new Intent(this, GrammarTestPage.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.main_page_sub_title_spa_test) {
+            Intent intent = new Intent(this, SpaTestPage.class);
+            startActivity(intent);
+        }
+    } //onClick();
+
+    private void initializeClass() {
         //initialize object
         mainPageSubTitleDailyWord = findViewById(R.id.main_page_sub_title_daily_word);
         mainPageSubTitleDailyStudy = findViewById(R.id.main_page_sub_title_daily_study);
@@ -44,31 +71,7 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
         mainPageSubTitleDailyTest.setOnClickListener(this);
         mainPageSubTitleGrammarTest.setOnClickListener(this);
         mainPageSubTitleSpaTest.setOnClickListener(this);
-
-
-
-    } //onCreate();
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.main_page_sub_title_daily_word) {
-            Intent intent = new Intent(this, DailyWordPage.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.main_page_sub_title_daily_study) {
-            Intent intent = new Intent(this, MainPageActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.main_page_sub_title_daily_test) {
-            Intent intent = new Intent(this, MainPageActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.main_page_sub_title_grammar_test) {
-            Intent intent = new Intent(this, MainPageActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.main_page_sub_title_spa_test) {
-            Intent intent = new Intent(this, MainPageActivity.class);
-            startActivity(intent);
-        }
-    } //onClick();
-
+    } //initializeClass();
 
 
 
