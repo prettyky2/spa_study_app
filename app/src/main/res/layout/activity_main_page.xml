@@ -7,18 +7,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".LoadingActivity">
+    tools:context=".MainPageActivity">
 
     <TextView
+        android:id="@+id/main_page_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:text="@string/main_page_title"
-        android:textSize="60sp"
+        android:textSize="100sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+        android:id="@+id/main_page_sub_title_daily_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/main_page_sub_title_daily_word"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_page_title"/>
+
+    <TextView
+        android:id="@+id/main_page_sub_title_daily_study"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/main_page_sub_title_daily_study"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_page_sub_title_daily_word"/>
+
+    <TextView
+        android:id="@+id/main_page_sub_title_daily_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/main_page_sub_title_daily_test"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_page_sub_title_daily_study"/>
+
+    <TextView
+        android:id="@+id/main_page_sub_title_grammar_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/main_page_sub_title_grammar_test"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_page_sub_title_daily_test"/>
+
+    <TextView
+        android:id="@+id/main_page_sub_title_spa_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/main_page_sub_title_spa_test"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_page_sub_title_grammar_test"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
