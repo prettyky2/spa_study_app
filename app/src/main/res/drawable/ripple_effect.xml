@@ -1,0 +1,9 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#FF6200EE"> <!-- Ripple 색상 설정 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFBB86FC"/> <!-- 기본 배경색 -->
+            <corners android:radius="20dp"/> <!-- 둥근 모서리 -->
+        </shape>
+    </item>
+</ripple>

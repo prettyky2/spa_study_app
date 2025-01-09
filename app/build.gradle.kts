@@ -44,4 +44,5 @@ dependencies {
     implementation(libs.poi.ooxml)
     implementation(libs.commons.collections4)
     implementation(libs.xmlbeans)
+    implementation("com.google.code.gson:gson:2.8.9")
 }

@@ -58,7 +58,11 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
-
+        <activity
+            android:name=".DailyWordStudyTest"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
 
 
 

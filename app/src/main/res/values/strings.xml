@@ -11,11 +11,15 @@
     <string name="main_page_sub_title_grammar_test">Grammar Test</string>
     <string name="main_page_sub_title_spa_test">SPA Test</string>
 
+    <string name="dialog_daily_word_title">Choose what you want to do</string>
+    <string name="dialog_daily_word_study">Study</string>
+    <string name="dialog_daily_word_test">Test</string>
 
-
-
-
-
+    <string name="layout_title">Title</string>
+    <string name="word_korean">Word Korean</string>
+    <string name="word_english">Word English</string>
+    <string name="example_interpretation">Example Interpretation</string>
+    <string name="example_sentence">Example Sentence</string>
 
 
 
