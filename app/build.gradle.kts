@@ -45,4 +45,5 @@ dependencies {
     implementation(libs.commons.collections4)
     implementation(libs.xmlbeans)
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.cloud:google-cloud-texttospeech:2.8.2")
 }

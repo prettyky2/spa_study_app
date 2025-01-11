@@ -1,8 +1,10 @@
 package com.example.myapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.GestureDetector;
@@ -42,6 +44,7 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
     String jsonData = null;
     int wordsPerDay = AppConstants.WORDS_PER_DAY;
     private ProgressBar progressBar; // ProgressBar 추가
+    ImageView onClickImgage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +85,15 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
-
-
     } //onCreate()
 
     @Override
     public void onClick(View v) {
-
+        if (v.getId() == R.id.on_click_image) {
+            wordEnglish.setVisibility(View.VISIBLE);
+            exampleSentence.setVisibility(View.VISIBLE);
+            Log.e(TAG,"onclick");
+        }
     } //onClick();
 
     @Override
@@ -116,7 +121,8 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
         exampleInterpretation = findViewById(R.id.example_interpretation);
         exampleSentence = findViewById(R.id.example_sentence);
         progressBar = findViewById(R.id.progress_bar);
-
+        onClickImgage = findViewById(R.id.on_click_image);
+        onClickImgage.setOnClickListener(this);
 
         if (jsonData != null) {
             try {
@@ -138,11 +144,26 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
             return; // 초기화 실패 처리
         }
 
-        // ProgressBar 초기값 설정
-        updateProgressBar(0);
+        if(mode==0) {
+            onClickImgage.setVisibility(View.GONE);
+        }
+
+        if (mode == 1) { // Test 모드
+            wordEnglish.setVisibility(View.GONE);
+            exampleSentence.setVisibility(View.GONE);
+
+            // wordKorean 클릭 리스너 설정
+//            onClickImgage.setOnClickListener(v -> {
+//                wordEnglish.setVisibility(View.VISIBLE);
+//                exampleSentence.setVisibility(View.VISIBLE);
+//            });
+        }
 
         // 첫 번째 단어 데이터 표시
         updateWordView(0);
+
+        // ProgressBar 초기값 설정
+        updateProgressBar(0);
 
     } //initializeClass()
 
@@ -173,6 +194,13 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
         wordEnglish.setText(row.getColumn2());
         exampleInterpretation.setText(row.getColumn3());
         exampleSentence.setText(row.getColumn4());
+
+        // Test 모드일 경우 단어 변경 시 숨김
+        if (mode == 1) { // Test 모드
+            wordEnglish.setVisibility(View.GONE);
+            exampleSentence.setVisibility(View.GONE);
+        }
+
     } //updateWordView(int rowIndex)
 
     private String getCellData(Row row, int cellIndex) {

@@ -78,7 +78,7 @@
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="15dp"
+        android:layout_height="50dp"
         android:max="100"
         android:progress="0"
         app:indicatorColor="@color/primary"
@@ -88,6 +88,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-
+    <ImageView
+        android:id="@+id/on_click_image"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:background="@color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
