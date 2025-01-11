@@ -3,6 +3,7 @@ package com.example.myapp;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -39,6 +40,8 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
     TextView exampleInterpretation  = null;
     TextView exampleSentence  = null;
     String jsonData = null;
+    int wordsPerDay = AppConstants.WORDS_PER_DAY;
+    private ProgressBar progressBar; // ProgressBar 추가
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 if (selectedChunk == null || selectedChunk.isEmpty()) {
                     Log.e(TAG, "selectedChunk is null or empty. Cannot handle swipe.");
-                    return false; // 스와이프 처리 중단
+                    return false;
                 }
 
                 if (e1.getX() - e2.getX() > 100) {
@@ -66,12 +69,14 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
                     if (currentRowIndex < selectedChunk.size() - 1) {
                         currentRowIndex++;
                         updateWordView(currentRowIndex);
+                        updateProgressBar(currentRowIndex);
                     }
                 } else if (e2.getX() - e1.getX() > 100) {
                     // 오른쪽으로 스와이프 (이전 단어)
                     if (currentRowIndex > 0) {
                         currentRowIndex--;
                         updateWordView(currentRowIndex);
+                        updateProgressBar(currentRowIndex);
                     }
                 }
                 return super.onFling(e1, e2, velocityX, velocityY);
@@ -110,7 +115,7 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
         wordEnglish = findViewById(R.id.word_english);
         exampleInterpretation = findViewById(R.id.example_interpretation);
         exampleSentence = findViewById(R.id.example_sentence);
-
+        progressBar = findViewById(R.id.progress_bar);
 
 
         if (jsonData != null) {
@@ -133,11 +138,21 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
             return; // 초기화 실패 처리
         }
 
+        // ProgressBar 초기값 설정
+        updateProgressBar(0);
+
         // 첫 번째 단어 데이터 표시
         updateWordView(0);
 
-
     } //initializeClass()
+
+    private void updateProgressBar(int currentIndex) {
+        if (progressBar != null && selectedChunk != null) {
+            int progress = (int) (((float) (currentIndex + 1) / wordsPerDay) * 100);
+            progressBar.setProgress(progress); // 진행도 업데이트
+            Log.d(TAG, "ProgressBar updated: " + progress + "%");
+        }
+    }
 
     private void updateWordView(int rowIndex) {
         if (selectedChunk == null || rowIndex < 0 || rowIndex >= selectedChunk.size()) {

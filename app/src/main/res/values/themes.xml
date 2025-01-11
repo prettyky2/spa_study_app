@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.Spa_study_app" parent="Base.Theme.Spa_study_app" />
+
+
 </resources>

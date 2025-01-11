@@ -10,6 +10,7 @@
     <string name="main_page_sub_title_daily_test">Daily Test</string>
     <string name="main_page_sub_title_grammar_test">Grammar Test</string>
     <string name="main_page_sub_title_spa_test">SPA Test</string>
+    <string name="main_page_sub_title_top_gun">TOPGUN</string>
 
     <string name="dialog_daily_word_title">Choose what you want to do</string>
     <string name="dialog_daily_word_study">Study</string>

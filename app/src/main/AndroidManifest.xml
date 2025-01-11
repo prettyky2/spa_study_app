@@ -64,7 +64,11 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
-
+        <activity
+            android:name=".TopGunPage"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
 
 
 

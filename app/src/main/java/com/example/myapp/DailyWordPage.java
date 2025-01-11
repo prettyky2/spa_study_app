@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.graphics.Color;
 import com.google.gson.Gson; // Gson 라이브러리 import
-import com.example.myapp.ExcelRow;
+
 
 public class DailyWordPage extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,6 +38,7 @@ public class DailyWordPage extends AppCompatActivity implements View.OnClickList
     ProgressBar progressBar;
     private List<List<Row>> chunkedRows; // 20개씩 나눠진 행 데이터 저장
     private List<Row> allRows = new ArrayList<>(); // 선언과 동시에 초기화; // 필드 변수로 선언
+    int wordsPerDay = AppConstants.WORDS_PER_DAY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +124,7 @@ public class DailyWordPage extends AppCompatActivity implements View.OnClickList
             for (Row row : sheet) {
                 allRows.add(row);
             }
-            chunkedRows = chunkRows(allRows, 20); // 20개씩 묶기
+            chunkedRows = chunkRows(allRows, wordsPerDay); // n개씩 묶기 n=상수값
             workbook.close();
             inputStream.close();
             Log.d(TAG, "총 행 수: " + allRows.size());

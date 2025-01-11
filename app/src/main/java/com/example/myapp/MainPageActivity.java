@@ -20,6 +20,7 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
     TextView mainPageSubTitleDailyTest = null;
     TextView mainPageSubTitleGrammarTest = null;
     TextView mainPageSubTitleSpaTest = null;
+    TextView mainPageSubTitleTopGun = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
         } else if (v.getId() == R.id.main_page_sub_title_spa_test) {
             Intent intent = new Intent(this, SpaTestPage.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.main_page_sub_title_topgun) {
+            Intent intent = new Intent(this, TopGunPage.class);
+            startActivity(intent);
         }
     } //onClick();
 
@@ -65,12 +69,14 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
         mainPageSubTitleDailyTest = findViewById(R.id.main_page_sub_title_daily_test);
         mainPageSubTitleGrammarTest = findViewById(R.id.main_page_sub_title_grammar_test);
         mainPageSubTitleSpaTest = findViewById(R.id.main_page_sub_title_spa_test);
+        mainPageSubTitleTopGun = findViewById(R.id.main_page_sub_title_topgun);
 
         mainPageSubTitleDailyWord.setOnClickListener(this);
         mainPageSubTitleDailyStudy.setOnClickListener(this);
         mainPageSubTitleDailyTest.setOnClickListener(this);
         mainPageSubTitleGrammarTest.setOnClickListener(this);
         mainPageSubTitleSpaTest.setOnClickListener(this);
+        mainPageSubTitleTopGun.setOnClickListener(this);
     } //initializeClass();
 
 
