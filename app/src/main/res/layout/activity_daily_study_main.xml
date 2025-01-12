@@ -21,4 +21,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+
+    <TextView
+        android:id="@+id/daily_study_personal_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/daily_study_personal_question"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/daily_study_page_title"/>
+
+    <TextView
+        android:id="@+id/daily_study_summarize_passage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/daily_study_summarize_passage"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/daily_study_personal_question"/>
+
+    <TextView
+        android:id="@+id/daily_study_tell_your_opinion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/daily_study_tell_your_opinion"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/daily_study_summarize_passage"/>
+
+    <TextView
+        android:id="@+id/daily_study_describe_graph_and_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/daily_study_describe_graph_and_photo"
+        android:textSize="60sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/daily_study_tell_your_opinion"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

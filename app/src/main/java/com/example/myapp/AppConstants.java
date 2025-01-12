@@ -5,7 +5,7 @@ public class AppConstants {
     // 단어 학습 관련 상수
     public static final int WORDS_PER_DAY = 20; // 하루에 외울 단어 20개
 
-
+    public static final double SENTENCE_PLAY_SPEED = 0.8;
 
     // 기타 상수
     public static final String DAILY_WORD_FILE_NAME = "daily_word.xlsx"; // 엑셀 파일 이름

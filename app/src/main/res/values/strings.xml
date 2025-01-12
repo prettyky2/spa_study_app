@@ -22,10 +22,10 @@
     <string name="example_interpretation">Example Interpretation</string>
     <string name="example_sentence">Example Sentence</string>
 
-
-
-
-
+    <string name="daily_study_personal_question">Personal Question</string>
+    <string name="daily_study_summarize_passage">Summarize Passage</string>
+    <string name="daily_study_tell_your_opinion">Tell Your Opinion</string>
+    <string name="daily_study_describe_graph_and_photo">Describe Graph And Photo</string>
 
 
 

@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/word_korean"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:layout_marginTop="50dp"
         android:text= "@string/word_korean"
         android:textSize="60sp"
@@ -37,7 +37,7 @@
     <TextView
         android:id="@+id/word_english"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:layout_marginTop="20dp"
         android:text= "@string/word_english"
         android:textSize="60sp"
@@ -50,7 +50,7 @@
     <TextView
         android:id="@+id/example_interpretation"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         android:layout_marginTop="20dp"
         android:text= "@string/example_interpretation"
         android:textSize="50sp"
@@ -64,7 +64,7 @@
     <TextView
         android:id="@+id/example_sentence"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         android:layout_marginTop="20dp"
         android:text= "@string/example_sentence"
         android:textSize="50sp"
