@@ -1,9 +1,6 @@
 package com.example.myapp;
 
-import android.content.Intent;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
+
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
@@ -12,7 +9,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,23 +16,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Cell;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
-
-import com.google.api.gax.core.FixedCredentialsProvider;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.poi.ss.usermodel.Row;
 import java.lang.reflect.Type;
-import com.example.myapp.ExcelRow;
 import com.google.cloud.texttospeech.v1.*;
-import com.google.common.collect.Lists;
+
 
 
 public class DailyWordStudyTest extends AppCompatActivity implements View.OnClickListener {
