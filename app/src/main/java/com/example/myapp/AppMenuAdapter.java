@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,16 @@ public class AppMenuAdapter extends RecyclerView.Adapter<AppMenuAdapter.ViewHold
 
     private final Context context;
     private final List<AppMenuItem> menuItems;
+    private final OnItemClickListener listener;
 
-    public AppMenuAdapter(Context context, List<AppMenuItem> menuItems) {
+    public interface OnItemClickListener {
+        void onItemClick(AppMenuItem item);
+    }
+
+    public AppMenuAdapter(Context context, List<AppMenuItem> menuItems, OnItemClickListener listener) {
         this.context = context;
         this.menuItems = menuItems;
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,13 +39,8 @@ public class AppMenuAdapter extends RecyclerView.Adapter<AppMenuAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AppMenuItem item = menuItems.get(position);
         holder.title.setText(item.getTitle());
-        holder.subtitle.setText(item.getSubtitle());
-
         // 클릭 이벤트
-        holder.itemView.setOnClickListener(v -> {
-            // 클릭된 메뉴에 따라 세부 내용을 업데이트
-            // 예: Intent로 새 Activity를 열거나 View를 전환
-        });
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 
     @Override
@@ -46,13 +48,18 @@ public class AppMenuAdapter extends RecyclerView.Adapter<AppMenuAdapter.ViewHold
         return menuItems.size();
     }
 
+    public void updateData(List<AppMenuItem> newMenuItems) {
+        this.menuItems.clear();
+        this.menuItems.addAll(newMenuItems);
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title, subtitle;
+        TextView title;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.menu_title);
-            subtitle = itemView.findViewById(R.id.menu_subtitle);
         }
     }
 }

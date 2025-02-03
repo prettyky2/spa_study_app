@@ -35,8 +35,10 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
     private GestureDetector gestureDetector;
     TextView wordKorean = null;
     TextView wordEnglish  = null;
+    TextView emptyWordEnglish  = null;
     TextView exampleInterpretation  = null;
     TextView exampleSentence  = null;
+    TextView emptyExampleSentence  = null;
     String jsonData = null;
     int wordsPerDay = AppConstants.WORDS_PER_DAY;
     private ProgressBar progressBar; // ProgressBar 추가
@@ -92,7 +94,9 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         if (v.getId() == R.id.on_click_image) {
             wordEnglish.setVisibility(View.VISIBLE);
+            emptyWordEnglish.setVisibility(View.GONE);
             exampleSentence.setVisibility(View.VISIBLE);
+            emptyExampleSentence.setVisibility(View.GONE);
             Log.e(TAG,"onclick");
         } else if (v.getId() == R.id.example_sentence) {
             // 클릭된 문장 읽기
@@ -137,9 +141,11 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
         // initialize TextViews
         wordKorean = findViewById(R.id.word_korean);
         wordEnglish = findViewById(R.id.word_english);
+        emptyWordEnglish = findViewById(R.id.word_english_empty_box);
         exampleInterpretation = findViewById(R.id.example_interpretation);
         exampleSentence = findViewById(R.id.example_sentence);
         exampleSentence.setOnClickListener(this);
+        emptyExampleSentence = findViewById(R.id.example_sentence_empty_box);
         progressBar = findViewById(R.id.progress_bar);
         onClickImgage = findViewById(R.id.on_click_image);
         onClickImgage.setOnClickListener(this);
@@ -169,6 +175,8 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
         }
 
         if (mode == 1) { // Test 모드
+            emptyWordEnglish.setVisibility(View.VISIBLE);
+            emptyExampleSentence.setVisibility(View.VISIBLE);
             wordEnglish.setVisibility(View.GONE);
             exampleSentence.setVisibility(View.GONE);
         }
@@ -197,11 +205,11 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
 
         ExcelRow row = (ExcelRow) selectedChunk.get(rowIndex);
 
-        // TextView 찾기
-        wordKorean = findViewById(R.id.word_korean);
-        wordEnglish = findViewById(R.id.word_english);
-        exampleInterpretation = findViewById(R.id.example_interpretation);
-        exampleSentence = findViewById(R.id.example_sentence);
+//        // TextView 찾기
+//        wordKorean = findViewById(R.id.word_korean);
+//        wordEnglish = findViewById(R.id.word_english);
+//        exampleInterpretation = findViewById(R.id.example_interpretation);
+//        exampleSentence = findViewById(R.id.example_sentence);
 
         // 셀 데이터 가져오기
         wordKorean.setText(row.getColumn1());
@@ -211,6 +219,8 @@ public class DailyWordStudyTest extends AppCompatActivity implements View.OnClic
 
         // Test 모드일 경우 단어 변경 시 숨김
         if (mode == 1) { // Test 모드
+            emptyWordEnglish.setVisibility(View.VISIBLE);
+            emptyExampleSentence.setVisibility(View.VISIBLE);
             wordEnglish.setVisibility(View.GONE);
             exampleSentence.setVisibility(View.GONE);
         }

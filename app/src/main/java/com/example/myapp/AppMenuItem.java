@@ -2,18 +2,18 @@ package com.example.myapp;
 
 public class AppMenuItem {
     private final String title;
-    private final String subtitle;
+    private final int id; // 고유 ID 필드 추가
 
-    public AppMenuItem(String title, String subtitle) {
+    public AppMenuItem(String title, int id) {
         this.title = title;
-        this.subtitle = subtitle;
+        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public int getId() {
+        return id; // getId 메서드 추가
     }
 }

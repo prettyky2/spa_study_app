@@ -12,9 +12,11 @@
     <string name="main_page_sub_title_spa_test">SPA Test</string>
     <string name="main_page_sub_title_top_gun">TOPGUN</string>
 
+
     <string name="dialog_daily_word_title">Choose what you want to do</string>
     <string name="dialog_daily_word_study">Study</string>
     <string name="dialog_daily_word_test">Test</string>
+
 
     <string name="layout_title">Title</string>
     <string name="word_korean">Word Korean</string>
@@ -22,39 +24,107 @@
     <string name="example_interpretation">Example Interpretation</string>
     <string name="example_sentence">Example Sentence</string>
 
+
     <string name="daily_study_personal_question">Personal Question</string>
+        <string name="personal_question_daily_routine">Daily Routine</string>
+            <string name="personal_question_daily_routine_company">Company</string>
+            <string name="personal_question_daily_routine_ride">Ride</string>
+            <string name="personal_question_daily_routine_travel">Travel</string>
+        <string name="personal_question_things_i_like">Things I Like</string>
+            <string name="personal_question_things_i_like_movie">Movie</string>
+            <string name="personal_question_things_i_like_food">Food</string>
+            <string name="personal_question_things_i_like_Place">Place</string>
+        <string name="personal_question_things_i_do">Things I Do</string>
+            <string name="personal_question_things_i_do_health">Health</string>
+            <string name="personal_question_things_i_do_stress">Stress</string>
+            <string name="personal_question_things_i_do_relationship">Relationship</string>
+        <string name="personal_question_past_work">Past Work</string>
+            <string name="personal_question_past_work_weather">Weather</string>
+            <string name="personal_question_past_work_travel">Travel</string>
+            <string name="personal_question_past_work_weekend">Weekend</string>
+        <string name="personal_question_guessing">Guessing</string>
+            <string name="personal_question_guessing_society">Society</string>
+            <string name="personal_question_guessing_vacation">Vacation</string>
+            <string name="personal_question_guessing_policy">Policy</string>
+
     <string name="daily_study_summarize_passage">Summarize Passage</string>
+            <string name="summarize_passage_common">Common</string>
+            <string name="summarize_passage_daily_life_1">Daily Life #1</string>
+            <string name="summarize_passage_daily_life_2">Daily Life #2</string>
+            <string name="summarize_passage_company">Company</string>
+            <string name="summarize_passage_technology">Technology</string>
+            <string name="summarize_passage_daily_life_3">Daily Life #3</string>
+            <string name="summarize_passage_effect_of_music">Effect Of Music</string>
+            <string name="summarize_passage_importance_helmet">Importance Of Helmet</string>
+            <string name="summarize_passage_internet_sns">Internet And SNS</string>
+            <string name="summarize_passage_importance_sleep">Importance Of Sleep</string>
+            <string name="summarize_passage_internet">Internet</string>
+
     <string name="daily_study_tell_your_opinion">Tell Your Opinion</string>
+        <string name="tell_your_opinion_company">Company</string>
+            <string name="tell_your_opinion_company_clothes">Clothes</string>
+            <string name="tell_your_opinion_company_relationship">Relationship</string>
+            <string name="tell_your_opinion_company_motivation">Motivation</string>
+        <string name="tell_your_opinion_technology">Technology</string>
+            <string name="tell_your_opinion_technology_internet_sns">Internet And SNS</string>
+            <string name="tell_your_opinion_technology_changeway">Change Way</string>
+            <string name="tell_your_opinion_technology_newtech">New Tech</string>
+        <string name="tell_your_opinion_societyculture">Society And Culture</string>
+            <string name="tell_your_opinion_societyculture_manners">Manners</string>
+            <string name="tell_your_opinion_societyculture_sexchange">Sex Change</string>
+            <string name="tell_your_opinion_societyculture_moving">Moving</string>
+        <string name="tell_your_opinion_raw_policy">Raw And Policy</string>
+            <string name="tell_your_opinion_raw_policy_smokingarea">Smoking Area</string>
+            <string name="tell_your_opinion_raw_policy_tech_develop">Tech Development</string>
+            <string name="tell_your_opinion_raw_policy_update_law">Update Law</string>
+        <string name="tell_your_opinion_prefer">Prefer</string>
+            <string name="tell_your_opinion_prefer_how_to_feedback">How To Feedback</string>
+            <string name="tell_your_opinion_prefer_how_to_pay">How To Pay</string>
+            <string name="tell_your_opinion_prefer_way_to_life">Way To Life</string>
+        <string name="tell_your_opinion_agree_or_not">Agree Or Not</string>
+            <string name="tell_your_opinion_agree_or_not_aboard">Aboard</string>
+            <string name="tell_your_opinion_agree_or_not_work_at_home">Work At Home</string>
+            <string name="tell_your_opinion_agree_or_not_way_to_study">Way To Study</string>
+
     <string name="daily_study_describe_graph_and_photo">Describe Graph And Photo</string>
-
-    <string name="personal_question_daily_outine">Daily Routine</string>
-    <string name="personal_question_things_i_like">Things I Like</string>
-    <string name="personal_question_things_i_do">Things I Do</string>
-    <string name="personal_question_past_work">Past Work</string>
-    <string name="personal_question_guessing">Guessing</string>
-
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
-<!--    <string name=""></string>-->
+        <string name="describe_graph_and_photo_bar_graph">Bar Graph</string>
+        <string name="describe_graph_and_photo_pie_graph">Pie Graph</string>
+        <string name="describe_graph_and_photo_line_graph">Line Graph</string>
+        <string name="describe_graph_and_photo_photo">Photo</string>
 
 
 
+
+
+
+    <string name="dscribe_graph_photo_bar_common"></string>
+    <string name="dscribe_graph_photo_1_bar_1"></string>
+    <string name="dscribe_graph_photo_2_bar_2"></string>
+    <string name="dscribe_graph_photo_3_bar_3"></string>
+    <string name="dscribe_graph_photo_pie_common"></string>
+    <string name="dscribe_graph_photo_4_pie_1"></string>
+    <string name="dscribe_graph_photo_5_pie_2"></string>
+    <string name="dscribe_graph_photo_6_pie_3"></string>
+    <string name="dscribe_graph_photo_line_common"></string>
+    <string name="dscribe_graph_photo_7_line_1"></string>
+    <string name="dscribe_graph_photo_8_line_2"></string>
+    <string name="dscribe_graph_photo_9_line_3"></string>
+    <string name="dscribe_graph_photo_photo_describe_common"></string>
+    <string name="dscribe_graph_photo_10_photo_describe_1"></string>
+    <string name="dscribe_graph_photo_11_photo_describe_2"></string>
+    <string name="dscribe_graph_photo_12_photo_describe_3"></string>
+    <string name="dscribe_graph_photo_photo_compare_common"></string>
+    <string name="dscribe_graph_photo_13_photo_describe_1"></string>
+    <string name="dscribe_graph_photo_14_photo_describe_2"></string>
+    <string name="dscribe_graph_photo_15_photo_describe_3"></string>
+    <string name="dscribe_graph_photo_photo_prefer_common"></string>
+    <string name="dscribe_graph_photo_16_photo_prefer_1"></string>
+    <string name="dscribe_graph_photo_17_photo_prefer_2"></string>
+    <string name="dscribe_graph_photo_18_photo_prefer_3"></string>
+    <string name="dscribe_graph_photo_sell_object_common"></string>
+    <string name="dscribe_graph_photo_19_sell_object_1"></string>
+    <string name="dscribe_graph_photo_20_sell_object_2"></string>
+    <string name="dscribe_graph_photo_21_sell_object_3"></string>
 
 
 </resources>
