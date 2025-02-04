@@ -88,43 +88,40 @@
 
     <string name="daily_study_describe_graph_and_photo">Describe Graph And Photo</string>
         <string name="describe_graph_and_photo_bar_graph">Bar Graph</string>
+            <string name="describe_graph_photo_bar_graph_common">Common</string>
+            <string name="describe_graph_photo_bar_graph_1_bar_1">Case_#1</string>
+            <string name="describe_graph_photo_bar_graph_2_bar_2">Case_#2</string>
+            <string name="describe_graph_photo_bar_graph_3_bar_3">Case_#3</string>
         <string name="describe_graph_and_photo_pie_graph">Pie Graph</string>
+            <string name="describe_graph_photo_pie_graph_common">Common</string>
+            <string name="describe_graph_photo_pie_graph_4_pie_1">Case_#1</string>
+            <string name="describe_graph_photo_pie_graph_5_pie_2">Case_#2</string>
+            <string name="describe_graph_photo_pie_graph_6_pie_3">Case_#3</string>
         <string name="describe_graph_and_photo_line_graph">Line Graph</string>
-        <string name="describe_graph_and_photo_photo">Photo</string>
-
-
-
-
-
-
-    <string name="dscribe_graph_photo_bar_common"></string>
-    <string name="dscribe_graph_photo_1_bar_1"></string>
-    <string name="dscribe_graph_photo_2_bar_2"></string>
-    <string name="dscribe_graph_photo_3_bar_3"></string>
-    <string name="dscribe_graph_photo_pie_common"></string>
-    <string name="dscribe_graph_photo_4_pie_1"></string>
-    <string name="dscribe_graph_photo_5_pie_2"></string>
-    <string name="dscribe_graph_photo_6_pie_3"></string>
-    <string name="dscribe_graph_photo_line_common"></string>
-    <string name="dscribe_graph_photo_7_line_1"></string>
-    <string name="dscribe_graph_photo_8_line_2"></string>
-    <string name="dscribe_graph_photo_9_line_3"></string>
-    <string name="dscribe_graph_photo_photo_describe_common"></string>
-    <string name="dscribe_graph_photo_10_photo_describe_1"></string>
-    <string name="dscribe_graph_photo_11_photo_describe_2"></string>
-    <string name="dscribe_graph_photo_12_photo_describe_3"></string>
-    <string name="dscribe_graph_photo_photo_compare_common"></string>
-    <string name="dscribe_graph_photo_13_photo_describe_1"></string>
-    <string name="dscribe_graph_photo_14_photo_describe_2"></string>
-    <string name="dscribe_graph_photo_15_photo_describe_3"></string>
-    <string name="dscribe_graph_photo_photo_prefer_common"></string>
-    <string name="dscribe_graph_photo_16_photo_prefer_1"></string>
-    <string name="dscribe_graph_photo_17_photo_prefer_2"></string>
-    <string name="dscribe_graph_photo_18_photo_prefer_3"></string>
-    <string name="dscribe_graph_photo_sell_object_common"></string>
-    <string name="dscribe_graph_photo_19_sell_object_1"></string>
-    <string name="dscribe_graph_photo_20_sell_object_2"></string>
-    <string name="dscribe_graph_photo_21_sell_object_3"></string>
+            <string name="describe_graph_photo_line_graph_common">Common</string>
+            <string name="describe_graph_photo_line_graph_7_line_1">Case_#1</string>
+            <string name="describe_graph_photo_line_graph_8_line_2">Case_#2</string>
+            <string name="describe_graph_photo_line_graph_9_line_3">Case_#3</string>
+        <string name="describe_graph_and_photo_photo_describe">Photo Describe</string>
+            <string name="describe_graph_photo_describe_photo_common">Common</string>
+            <string name="describe_graph_photo_10_describe_photo_1">Case_#1</string>
+            <string name="describe_graph_photo_11_describe_photo_2">Case_#2</string>
+            <string name="describe_graph_photo_12_describe_photo_3">Case_#3</string>
+        <string name="describe_graph_and_photo_photo_compare">Photo Compare</string>
+            <string name="describe_graph_photo_compare_photo_common">Common</string>
+            <string name="describe_graph_photo_13_compare_photo_1">Case_#1</string>
+            <string name="describe_graph_photo_14_compare_photo_2">Case_#2</string>
+            <string name="describe_graph_photo_15_compare_photo_3">Case_#3</string>
+        <string name="describe_graph_and_photo_photo_prefer">Photo Prefer</string>
+            <string name="describe_graph_photo_prefer_photo_common">Common</string>
+            <string name="describe_graph_photo_16_prefer_photo_1">Case_#1</string>
+            <string name="describe_graph_photo_17_prefer_photo_2">Case_#2</string>
+            <string name="describe_graph_photo_18_prefer_photo_3">Case_#3</string>
+        <string name="describe_graph_and_photo_sell_object">Sell Object</string>
+            <string name="describe_graph_photo_sell_object_common">Common</string>
+            <string name="describe_graph_photo_19_sell_object_1">Case_#1</string>
+            <string name="describe_graph_photo_20_sell_object_2">Case_#2</string>
+            <string name="describe_graph_photo_21_sell_object_3">Case_#3</string>
 
 
 </resources>

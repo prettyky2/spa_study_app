@@ -45,6 +45,12 @@
         </activity>
 
         <activity
+            android:name=".DailyStudyPractice"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+        <activity
             android:name=".DailyTestPage"
             android:exported="true"
             android:theme="@style/Theme.Spa_study_app">
