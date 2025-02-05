@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,7 +17,6 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
 
     TextView mainPageSubTitleDailyWord = null;
     TextView mainPageSubTitleDailyStudy = null;
-    TextView mainPageSubTitleDailyTest = null;
     TextView mainPageSubTitleGrammarTest = null;
     TextView mainPageSubTitleSpaTest = null;
     TextView mainPageSubTitleTopGun = null;
@@ -35,23 +34,25 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
 
         initializeClass(); // set button, text, progress bar, onClickListener etc
 
-
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finishAffinity(); // 앱 종료
+            }
+        });
 
     } //onCreate();
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.main_page_sub_title_daily_word) {
-            Intent intent = new Intent(this, DailyWordPage.class);
+            Intent intent = new Intent(this, DailyWordMain.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_daily_study) {
-            Intent intent = new Intent(this, DailyStudyPage.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.main_page_sub_title_daily_test) {
-            Intent intent = new Intent(this, DailyTestPage.class);
+            Intent intent = new Intent(this, DailyStudyMain.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_grammar_test) {
-            Intent intent = new Intent(this, GrammarTestPage.class);
+            Intent intent = new Intent(this, GrammarMain.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_spa_test) {
             Intent intent = new Intent(this, SpaTestPage.class);
@@ -66,19 +67,16 @@ public class MainPageActivity extends AppCompatActivity implements View.OnClickL
         //initialize object
         mainPageSubTitleDailyWord = findViewById(R.id.main_page_sub_title_daily_word);
         mainPageSubTitleDailyStudy = findViewById(R.id.main_page_sub_title_daily_study);
-        mainPageSubTitleDailyTest = findViewById(R.id.main_page_sub_title_daily_test);
         mainPageSubTitleGrammarTest = findViewById(R.id.main_page_sub_title_grammar_test);
         mainPageSubTitleSpaTest = findViewById(R.id.main_page_sub_title_spa_test);
         mainPageSubTitleTopGun = findViewById(R.id.main_page_sub_title_topgun);
 
         mainPageSubTitleDailyWord.setOnClickListener(this);
         mainPageSubTitleDailyStudy.setOnClickListener(this);
-        mainPageSubTitleDailyTest.setOnClickListener(this);
         mainPageSubTitleGrammarTest.setOnClickListener(this);
         mainPageSubTitleSpaTest.setOnClickListener(this);
         mainPageSubTitleTopGun.setOnClickListener(this);
     } //initializeClass();
-
 
 
 }

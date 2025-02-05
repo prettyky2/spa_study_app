@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +30,7 @@ public class AppMenuAdapter extends RecyclerView.Adapter<AppMenuAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_menu, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.activity_app_item_menu, parent, false);
         return new ViewHolder(view);
     }
 
