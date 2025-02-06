@@ -64,5 +64,6 @@ dependencies {
     implementation("com.google.cloud:google-cloud-texttospeech:2.15.0")
     implementation("com.google.guava:guava:32.0.1-jre")
     implementation("io.grpc:grpc-okhttp:1.57.0")
+    implementation ("androidx.media:media:1.7.0")
 
 }

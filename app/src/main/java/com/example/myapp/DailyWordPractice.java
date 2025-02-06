@@ -23,7 +23,7 @@ import com.google.cloud.texttospeech.v1.*;
 
 
 
-public class DailyWordPractice extends AppCompatActivity implements View.OnClickListener {
+public class DailyWordPractice extends AppApplication implements View.OnClickListener {
 
     private static final String TAG = "DailyWordStudyTest";
     int chunkIndex = 0;
@@ -226,5 +226,24 @@ public class DailyWordPractice extends AppCompatActivity implements View.OnClick
             exampleSentence.setVisibility(View.GONE);
         }
     } //updateWordView(int rowIndex)
+
+    @Override
+    protected void onNextPressed() {
+        if (currentRowIndex < selectedChunk.size() - 1) {
+            currentRowIndex++;
+            updateWordView(currentRowIndex);
+            updateProgressBar(currentRowIndex);
+        }
+    }
+
+    @Override
+    protected void onPreviousPressed() {
+        if (currentRowIndex > 0) {
+            currentRowIndex--;
+            updateWordView(currentRowIndex);
+            updateProgressBar(currentRowIndex);
+        }
+    }
+
 
 } //DailyWordStudyTest

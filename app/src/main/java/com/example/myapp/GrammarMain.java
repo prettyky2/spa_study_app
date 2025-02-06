@@ -21,7 +21,7 @@ import org.apache.poi.ss.usermodel.Row;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GrammarMain extends AppCompatActivity implements View.OnClickListener {
+public class GrammarMain extends AppApplication implements View.OnClickListener {
 
     private static final String TAG = "GrammarMain";
     ImageView grammar_3 = null;
@@ -34,7 +34,7 @@ public class GrammarMain extends AppCompatActivity implements View.OnClickListen
     ImageView grammar_10 = null;
     ImageView grammar_11 = null;
     ImageView grammar_12 = null;
-    int study_number = 0;
+    String study_number = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +54,27 @@ public class GrammarMain extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.grammar_3) {
-            study_number = 3;
+            study_number = "grammar_study_03";
         } else if(v.getId() == R.id.grammar_4) {
-            study_number = 4;
+            study_number = "grammar_study_04";
         } else if(v.getId() == R.id.grammar_5) {
-            study_number =5;
+            study_number = "grammar_study_05";
         } else if(v.getId() == R.id.grammar_6) {
-            study_number =6;
+            study_number = "grammar_study_06";
         } else if(v.getId() == R.id.grammar_7) {
-            study_number =7;
+            study_number = "grammar_study_07";
         } else if(v.getId() == R.id.grammar_8) {
-            study_number =8;
+            study_number = "grammar_study_08";
         } else if(v.getId() == R.id.grammar_9) {
-            study_number =9;
+            study_number = "grammar_study_09";
         } else if(v.getId() == R.id.grammar_10) {
-            study_number =10;
+            study_number = "grammar_study_10";
         } else if(v.getId() == R.id.grammar_11) {
-            study_number =11;
+            study_number = "grammar_study_11";
         } else if(v.getId() == R.id.grammar_12) {
-            study_number =12;
+            study_number = "grammar_study_12";
         }
+        showCustomDialog();
     } //onClick();
 
     private void initializeClass() {
@@ -100,7 +101,7 @@ public class GrammarMain extends AppCompatActivity implements View.OnClickListen
         grammar_12.setOnClickListener(this);
     }
 
-    private void showCustomDialog(int chunkIndex) {
+    private void showCustomDialog() {
         // 다이얼로그 생성
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.activity_app_dialog);

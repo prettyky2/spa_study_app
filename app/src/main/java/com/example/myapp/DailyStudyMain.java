@@ -32,7 +32,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 
-public class DailyStudyMain extends AppCompatActivity implements View.OnClickListener{
+public class DailyStudyMain extends AppApplication implements View.OnClickListener{
 
     private static final String TAG = "DailyStudyPage";
     private RecyclerView recyclerView;

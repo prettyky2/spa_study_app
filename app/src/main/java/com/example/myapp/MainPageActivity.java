@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
-public class MainPageActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainPageActivity extends AppApplication implements View.OnClickListener{
 
     TextView mainPageSubTitleDailyWord = null;
     TextView mainPageSubTitleDailyStudy = null;

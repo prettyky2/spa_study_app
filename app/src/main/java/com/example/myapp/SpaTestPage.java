@@ -9,7 +9,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class SpaTestPage extends AppCompatActivity implements View.OnClickListener {
+public class SpaTestPage extends AppApplication implements View.OnClickListener {
 
 
     @Override

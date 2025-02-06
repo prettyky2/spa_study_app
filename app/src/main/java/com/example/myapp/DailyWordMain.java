@@ -32,7 +32,7 @@ import java.util.List;
 import com.google.gson.Gson; // Gson 라이브러리 import
 
 
-public class DailyWordMain extends AppCompatActivity implements View.OnClickListener {
+public class DailyWordMain extends AppApplication implements View.OnClickListener {
 
     private static final String TAG = "DailyWordPageActivity";
     ProgressBar progressBar;

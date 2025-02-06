@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="@string/main_page_sub_title_grammar_test"
+        android:text="@string/main_page_sub_title_grammar_practice"
         android:textSize="60sp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"

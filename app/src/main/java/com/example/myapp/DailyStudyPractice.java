@@ -19,7 +19,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.List;
 
-public class DailyStudyPractice extends AppCompatActivity implements View.OnClickListener {
+public class DailyStudyPractice extends AppApplication implements View.OnClickListener {
 
     private static final String TAG = "DailyStudyPractice";
     private String studyTopic;
@@ -173,4 +173,27 @@ public class DailyStudyPractice extends AppCompatActivity implements View.OnClic
     public boolean onTouchEvent(MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
     }
+
+    @Override
+    protected void onNextPressed() {
+        if (sentences != null && currentSentenceIndex < sentences.size() - 1) {
+            currentSentenceIndex++;
+            updateSentenceView();
+            if (practice_mode == 1) {
+                exampleSentence.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void onPreviousPressed() {
+        if (sentences != null && currentSentenceIndex > 0) {
+            currentSentenceIndex--;
+            updateSentenceView();
+            if (practice_mode == 1) {
+                exampleSentence.setVisibility(View.GONE);
+            }
+        }
+    }
+
 }

@@ -1,10 +1,20 @@
 package com.example.myapp;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -16,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+
 
 public class AppTTSPlayer {
 
@@ -41,8 +52,6 @@ public class AppTTSPlayer {
         Cell cell = row.getCell(cellIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
         return cell.toString();
     } //getCellData(Row row, int cellIndex)
-
-
 
     private void initializeTextToSpeech() {
         try {
@@ -85,51 +94,110 @@ public class AppTTSPlayer {
             }
         }
 
-        try {
-            // 텍스트 입력
-            SynthesisInput input = SynthesisInput.newBuilder().setText(text).build();
+        boolean isBluetoothConnected = false;
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-            // 목소리 선택
-            VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()
-                    .setLanguageCode("en-US")  // 언어 코드
-                    .setName("en-US-Neural2-H") // 목소리 이름
-                    .setSsmlGender(SsmlVoiceGender.FEMALE) // 성별
-                    .build();
-
-            // 오디오 설정
-            AudioConfig audioConfig = AudioConfig.newBuilder()
-                    .setAudioEncoding(AudioEncoding.LINEAR16) // PCM 인코딩
-                    .setSpeakingRate(1.0)  // 말하는 속도 (조정 가능)
-                    .setPitch(0.0)         // 음높이
-                    .build();
-
-            // 음성 합성 요청
-            SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, voice, audioConfig);
-
-            Log.d(TAG, "Requested Voice Name: " + voice.getName());
-            Log.d(TAG, "Synthesized Voice: " + response.toString());
-
-            // 오디오 데이터 추출
-            byte[] audioContents = response.getAudioContent().toByteArray();
-
-            // 오디오 데이터 재생
-            playAudio(audioContents);
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error while synthesizing speech: " + e.getMessage());
+        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+            try {
+                // 🔹 블루투스 권한 체크 추가
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    int profileConnectionState = bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
+                    isBluetoothConnected = (profileConnectionState == BluetoothProfile.STATE_CONNECTED);
+                } else {
+                    Log.w(TAG, "Bluetooth permission not granted. Skipping Bluetooth check.");
+                }
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException while checking Bluetooth connection: " + e.getMessage());
+            }
         }
-    }
 
+        long delay = isBluetoothConnected ? 500 : 0;
+
+        new Handler().postDelayed(() -> {
+            try {
+                SynthesisInput input = SynthesisInput.newBuilder().setText(text).build();
+                VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()
+                        .setLanguageCode("en-US")
+                        .setName("en-US-Neural2-H")
+                        .setSsmlGender(SsmlVoiceGender.FEMALE)
+                        .build();
+
+                AudioConfig audioConfig = AudioConfig.newBuilder()
+                        .setAudioEncoding(AudioEncoding.LINEAR16)
+                        .setSpeakingRate(1.0)
+                        .setPitch(0.0)
+                        .build();
+
+                SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, voice, audioConfig);
+                byte[] audioContents = response.getAudioContent().toByteArray();
+                playAudio(audioContents);
+            } catch (Exception e) {
+                Log.e(TAG, "Error while synthesizing speech: " + e.getMessage());
+            }
+        }, delay);
+    }
 
     private void playAudio(byte[] audioData) {
         try {
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+            // 🔹 오디오 포커스 요청
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+
+            AudioFocusRequest audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                    .setAudioAttributes(audioAttributes)
+                    .setOnAudioFocusChangeListener(focusChange -> {
+                        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                            Log.d(TAG, "Audio Focus Lost - Stopping playback");
+                        }
+                    })
+                    .build();
+
+            int focusResult = audioManager.requestAudioFocus(audioFocusRequest);
+            if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                Log.e(TAG, "Failed to gain audio focus");
+                return;
+            }
+
+            // 🔹 블루투스 A2DP 연결 확인 (전화용 SCO 사용 안 함)
+            boolean isBluetoothConnected = false;
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                try {
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        int profileConnectionState = bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
+                        isBluetoothConnected = (profileConnectionState == BluetoothProfile.STATE_CONNECTED);
+                    } else {
+                        Log.w(TAG, "Bluetooth permission not granted. Skipping Bluetooth check.");
+                    }
+                } catch (SecurityException e) {
+                    Log.e(TAG, "SecurityException while checking Bluetooth connection: " + e.getMessage());
+                }
+            }
+
+            if (isBluetoothConnected) {
+                Log.d(TAG, "Bluetooth is connected, forcing audio to Bluetooth A2DP");
+                audioManager.setMode(AudioManager.MODE_NORMAL);
+                audioManager.setSpeakerphoneOn(false);
+                audioManager.setBluetoothScoOn(false); // 🔹 A2DP를 위해 SCO OFF
+            } else {
+                Log.d(TAG, "Bluetooth not connected, playing through phone speaker");
+            }
+
+            // 🔹 AudioTrack 설정 변경 (MODE_STREAM으로 변경)
             AudioTrack audioTrack = new AudioTrack(
                     AudioManager.STREAM_MUSIC,
-                    24000, // 생성된 데이터와 동일한 샘플 레이트로 수정
+                    24000, // 샘플 레이트
                     AudioFormat.CHANNEL_OUT_MONO,
                     AudioFormat.ENCODING_PCM_16BIT,
                     audioData.length,
-                    AudioTrack.MODE_STATIC
+                    AudioTrack.MODE_STREAM // 🔹 MODE_STATIC → MODE_STREAM 변경
             );
 
             // 실제 오디오 데이터를 작성
@@ -142,43 +210,5 @@ public class AppTTSPlayer {
         }
     }
 
-
-    private void listAvailableVoices() {
-//        try {
-//            // res/raw에서 JSON 키 파일 로드
-//            InputStream credentialsStream = getResources().openRawResource(R.raw.spastudyproject_key);
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(credentialsStream)
-//                    .createScoped(Collections.singletonList("https://www.googleapis.com/auth/cloud-platform"));
-//
-//            // 인증 정보를 사용해 TTS 클라이언트 생성
-//            TextToSpeechSettings settings = TextToSpeechSettings.newBuilder()
-//                    .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
-//                    .setEndpoint("us-central1-texttospeech.googleapis.com:443")
-//                    .build();
-//            if (textToSpeechClient != null) {
-//                textToSpeechClient.close();
-//                textToSpeechClient = null;
-//            }
-//            TextToSpeechClient textToSpeechClient = TextToSpeechClient.create(settings);
-//
-//            // 목소리 리스트 가져오기
-//            ListVoicesRequest request = ListVoicesRequest.newBuilder().build();
-//            ListVoicesResponse response = textToSpeechClient.listVoices(request);
-//
-//            // 결과 출력
-//            for (Voice voice : response.getVoicesList()) {
-//                Log.d(TAG, "Voice Name: " + voice.getName());
-//                Log.d(TAG, "Supported Languages: " + voice.getLanguageCodesList());
-//                Log.d(TAG, "Gender: " + voice.getSsmlGender());
-//                Log.d(TAG, "Natural Sample Rate Hertz: " + voice.getNaturalSampleRateHertz());
-//            }
-//
-//            textToSpeechClient.close();
-//        } catch (Exception e) {
-//            Log.e(TAG, "Error listing voices: " + e.getMessage());
-//        }
-    }
-
-
-
 }
+

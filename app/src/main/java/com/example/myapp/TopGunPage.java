@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class TopGunPage  extends AppCompatActivity implements View.OnClickListener {
+public class TopGunPage  extends AppApplication implements View.OnClickListener {
 
 
     @Override
