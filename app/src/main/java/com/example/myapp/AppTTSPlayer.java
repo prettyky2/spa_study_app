@@ -112,9 +112,6 @@ public class AppTTSPlayer {
             }
         }
 
-        long delay = isBluetoothConnected ? 500 : 0;
-
-        new Handler().postDelayed(() -> {
             try {
                 SynthesisInput input = SynthesisInput.newBuilder().setText(text).build();
                 VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()
@@ -131,14 +128,13 @@ public class AppTTSPlayer {
 
                 SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, voice, audioConfig);
                 byte[] audioContents = response.getAudioContent().toByteArray();
-                playAudio(audioContents);
+                playAudio(audioContents, isBluetoothConnected);
             } catch (Exception e) {
                 Log.e(TAG, "Error while synthesizing speech: " + e.getMessage());
             }
-        }, delay);
     }
 
-    private void playAudio(byte[] audioData) {
+    private void playAudio(byte[] audioData, boolean isBluetoothConnected) {
         try {
             AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
@@ -163,31 +159,43 @@ public class AppTTSPlayer {
                 return;
             }
 
-            // 🔹 블루투스 A2DP 연결 확인 (전화용 SCO 사용 안 함)
-            boolean isBluetoothConnected = false;
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-            if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-                try {
-                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        int profileConnectionState = bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
-                        isBluetoothConnected = (profileConnectionState == BluetoothProfile.STATE_CONNECTED);
-                    } else {
-                        Log.w(TAG, "Bluetooth permission not granted. Skipping Bluetooth check.");
-                    }
-                } catch (SecurityException e) {
-                    Log.e(TAG, "SecurityException while checking Bluetooth connection: " + e.getMessage());
-                }
-            }
-
+            // 🔹 블루투스 연결 시에만 500ms 무음 추가
             if (isBluetoothConnected) {
-                Log.d(TAG, "Bluetooth is connected, forcing audio to Bluetooth A2DP");
-                audioManager.setMode(AudioManager.MODE_NORMAL);
-                audioManager.setSpeakerphoneOn(false);
-                audioManager.setBluetoothScoOn(false); // 🔹 A2DP를 위해 SCO OFF
-            } else {
-                Log.d(TAG, "Bluetooth not connected, playing through phone speaker");
+                int silenceDurationMs = 500;
+                int sampleRate = 24000;
+                int numChannels = 1;
+                int bytesPerSample = 2; // 16bit PCM = 2 bytes per sample
+
+                int silenceByteLength = (sampleRate * numChannels * bytesPerSample * silenceDurationMs) / 1000;
+                byte[] silenceData = new byte[silenceByteLength];
+
+                // 🔹 16비트 PCM 무음 값 (리틀 엔디안 기준 0x0000) 명확히 설정
+                for (int i = 0; i < silenceByteLength; i += 2) {
+                    silenceData[i] = 0x00;
+                    silenceData[i + 1] = 0x00;
+                }
+
+                // 🔹 기존 오디오 첫 50ms의 평균값을 구해서 무음과 부드럽게 연결
+                int fadeInSamples = (sampleRate * numChannels * bytesPerSample * 50) / 1000; // 50ms 구간
+                short firstAudioSample = 0;
+
+                if (audioData.length > 2) {
+                    firstAudioSample = (short) ((audioData[0] & 0xFF) | (audioData[1] << 8)); // 첫 샘플 값
+                }
+
+                for (int i = silenceByteLength - fadeInSamples; i < silenceByteLength; i += 2) {
+                    float factor = (float) (i - (silenceByteLength - fadeInSamples)) / fadeInSamples;
+                    short fadeSample = (short) (factor * firstAudioSample); // 첫 오디오 샘플 값으로 점진적 증가
+                    silenceData[i] = (byte) (fadeSample & 0xFF);
+                    silenceData[i + 1] = (byte) ((fadeSample >> 8) & 0xFF);
+                }
+
+                // 🔹 무음과 기존 오디오 데이터 결합
+                byte[] finalAudioData = new byte[silenceData.length + audioData.length];
+                System.arraycopy(silenceData, 0, finalAudioData, 0, silenceData.length);
+                System.arraycopy(audioData, 0, finalAudioData, silenceData.length, audioData.length);
+
+                audioData = finalAudioData; // 🔹 변경된 데이터 사용
             }
 
             // 🔹 AudioTrack 설정 변경 (MODE_STREAM으로 변경)

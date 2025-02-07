@@ -63,7 +63,12 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("com.google.cloud:google-cloud-texttospeech:2.15.0")
     implementation("com.google.guava:guava:32.0.1-jre")
+    implementation("com.google.cloud:google-cloud-translate:2.20.0")
     implementation("io.grpc:grpc-okhttp:1.57.0")
     implementation ("androidx.media:media:1.7.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("org.apache.poi:poi:5.2.3")
+    implementation ("org.apache.poi:poi-ooxml:5.2.3")
 
 }

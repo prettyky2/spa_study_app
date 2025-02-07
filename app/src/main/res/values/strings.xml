@@ -17,6 +17,12 @@
     <string name="dialog_daily_word_study">Study</string>
     <string name="dialog_daily_word_test">Test</string>
 
+    <string name="dialog_user_word_english_text">English : </string>
+    <string name="dialog_user_word_korean_text">Korean : </string>
+    <string name="dialog_user_word_english">apple</string>
+    <string name="dialog_user_word_korean">사과</string>
+    <string name="dialog_user_word_save">SAVE</string>
+    <string name="dialog_user_word_ok">OK</string>
 
     <string name="layout_title">Title</string>
     <string name="word_korean">Word Korean</string>
