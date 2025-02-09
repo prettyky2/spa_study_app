@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -111,11 +112,15 @@ public class GrammarMain extends AppApplication implements View.OnClickListener 
         dialog.setOnCancelListener(dialogInterface -> dialog.dismiss());
 
         // 다이얼로그 뷰 초기화
+        Button btnWord = dialog.findViewById(R.id.btn_word);
         Button btnStudy = dialog.findViewById(R.id.btn_study);
         Button btnExam = dialog.findViewById(R.id.btn_test);
 
+        btnWord.setText(R.string.dialog_daily_word_study);
+        btnStudy.setVisibility(View.GONE);
+
         // 버튼 이벤트 설정
-        btnStudy.setOnClickListener(v -> {
+        btnWord.setOnClickListener(v -> {
             navigateToNextActivity(0); // 학습 모드로 이동
             dialog.dismiss();
         });

@@ -186,10 +186,18 @@ public class DailyStudyMain extends AppApplication implements View.OnClickListen
         dialog.setOnCancelListener(dialogInterface -> dialog.dismiss());
 
         // 다이얼로그 뷰 초기화
+        Button btnWord = dialog.findViewById(R.id.btn_word);
         Button btnStudy = dialog.findViewById(R.id.btn_study);
         Button btnTest = dialog.findViewById(R.id.btn_test);
 
         // 버튼 이벤트 설정
+        btnWord.setOnClickListener(v -> {
+            Intent intent = new Intent(this, DailyWordPractice.class);
+            intent.putExtra("study_topic", studyTopic);
+            startActivity(intent);
+            dialog.dismiss();
+        });
+
         btnStudy.setOnClickListener(v -> {
             navigateToStudyPractice(studyTopic, 0); // 0: STUDY 모드
             dialog.dismiss();

@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,6 +19,7 @@ public class MainPageActivity extends AppApplication implements View.OnClickList
     TextView mainPageSubTitleGrammarTest = null;
     TextView mainPageSubTitleSpaTest = null;
     TextView mainPageSubTitleTopGun = null;
+    TextView mainPageSubTitleSetting = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +55,13 @@ public class MainPageActivity extends AppApplication implements View.OnClickList
             Intent intent = new Intent(this, GrammarMain.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_spa_test) {
-            Intent intent = new Intent(this, SpaTestPage.class);
+            Intent intent = new Intent(this, SpaTestMain.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_topgun) {
             Intent intent = new Intent(this, TopGunPage.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.main_page_sub_title_setting) {
+            Intent intent = new Intent(this, AppSettingMain.class);
             startActivity(intent);
         }
     } //onClick();
@@ -70,12 +73,16 @@ public class MainPageActivity extends AppApplication implements View.OnClickList
         mainPageSubTitleGrammarTest = findViewById(R.id.main_page_sub_title_grammar_test);
         mainPageSubTitleSpaTest = findViewById(R.id.main_page_sub_title_spa_test);
         mainPageSubTitleTopGun = findViewById(R.id.main_page_sub_title_topgun);
+        mainPageSubTitleSetting = findViewById(R.id.main_page_sub_title_setting);
 
         mainPageSubTitleDailyWord.setOnClickListener(this);
         mainPageSubTitleDailyStudy.setOnClickListener(this);
         mainPageSubTitleGrammarTest.setOnClickListener(this);
         mainPageSubTitleSpaTest.setOnClickListener(this);
         mainPageSubTitleTopGun.setOnClickListener(this);
+        mainPageSubTitleSetting.setOnClickListener(this);
+
+        mainPageSubTitleDailyWord.setVisibility(View.GONE);
     } //initializeClass();
 
 

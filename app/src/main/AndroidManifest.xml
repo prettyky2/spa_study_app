@@ -73,7 +73,7 @@
         </activity>
 
         <activity
-            android:name=".SpaTestPage"
+            android:name=".SpaTestMain"
             android:exported="true"
             android:theme="@style/Theme.Spa_study_app">
         </activity>
@@ -90,7 +90,11 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
-
+        <activity
+            android:name=".AppSettingMain"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
 
 
 

@@ -4,14 +4,13 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -34,6 +33,8 @@ public class AppTTSPlayer {
     private static AppTTSPlayer instance;
     private TextToSpeechClient textToSpeechClient;
     private Context context;
+    private double TTSAudioSpeed = 1.0; // 기본값 1.0
+
 
     // Singleton private constructor
     private AppTTSPlayer(Context context) {
@@ -48,6 +49,7 @@ public class AppTTSPlayer {
         }
         return instance;
     }
+
     private String getCellData(Row row, int cellIndex) {
         Cell cell = row.getCell(cellIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
         return cell.toString();
@@ -55,6 +57,10 @@ public class AppTTSPlayer {
 
     private void initializeTextToSpeech() {
         try {
+            // SharedPreferences에서 저장된 값 가져오기
+            SharedPreferences prefs = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE);
+            TTSAudioSpeed = prefs.getFloat("tts_speed", 1.0f); // 기본값 1.0
+
             InputStream credentialsStream = context.getResources().openRawResource(R.raw.spastudyproject_key);
             GoogleCredentials credentials = GoogleCredentials.fromStream(credentialsStream)
                     .createScoped(Collections.singletonList("https://www.googleapis.com/auth/cloud-platform"));
@@ -122,7 +128,7 @@ public class AppTTSPlayer {
 
                 AudioConfig audioConfig = AudioConfig.newBuilder()
                         .setAudioEncoding(AudioEncoding.LINEAR16)
-                        .setSpeakingRate(1.0)
+                        .setSpeakingRate(TTSAudioSpeed) // 사용자 설정 반영
                         .setPitch(0.0)
                         .build();
 
@@ -216,6 +222,10 @@ public class AppTTSPlayer {
         } catch (Exception e) {
             Log.e(TAG, "Error playing audio: " + e.getMessage());
         }
+    }
+
+    public void setTTSAudioSpeed(double speed) {
+        TTSAudioSpeed = speed;
     }
 
 }
