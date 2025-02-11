@@ -185,26 +185,41 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
     }
 
     private void deleteUserWordFile() {
-        File file = new File(getFilesDir(), "user_word.xlsx"); // 내부 저장소 경로
+        File internalFile = new File(getFilesDir(), "user_word.xlsx"); // 내부 저장소 파일
+        File externalFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "user_word.xlsx"); // 다운로드 폴더의 백업 파일
 
+        boolean internalDeleted = deleteFileSafely(internalFile);
+        boolean externalDeleted = deleteFileSafely(externalFile);
+
+        if (internalDeleted && externalDeleted) {
+            showAlertDialog("삭제 완료", "내부 저장소 및 다운로드 폴더의 user_word.xlsx 파일이 삭제되었습니다.");
+        } else if (internalDeleted) {
+            showAlertDialog("삭제 완료", "내부 저장소의 user_word.xlsx 파일만 삭제되었습니다.");
+        } else if (externalDeleted) {
+            showAlertDialog("삭제 완료", "다운로드 폴더의 user_word.xlsx 파일만 삭제되었습니다.");
+        } else {
+            showAlertDialog("삭제 실패", "삭제할 파일이 없습니다.");
+        }
+    }
+
+    // 안전하게 파일 삭제하는 함수
+    private boolean deleteFileSafely(File file) {
         if (file.exists()) {
             if (file.delete()) {
-                showAlertDialog("삭제 완료", "user_word.xlsx 파일이 삭제되었습니다.");
+                return true;
             } else {
-                // 파일 삭제 실패 시 강제 삭제 시도
                 try {
                     file.getCanonicalFile().delete();
                     if (file.exists()) {
                         getApplicationContext().deleteFile(file.getName());
                     }
-                    showAlertDialog("삭제 완료", "user_word.xlsx 파일이 강제 삭제되었습니다.");
+                    return !file.exists();
                 } catch (IOException e) {
-                    showAlertDialog("삭제 실패", "파일을 삭제하는 중 오류 발생: " + e.getMessage());
+                    Log.e(TAG, "파일 삭제 오류: " + e.getMessage());
                 }
             }
-        } else {
-            showAlertDialog("삭제 실패", "삭제할 파일이 없습니다.");
         }
+        return false;
     }
 
     private void showAlertDialogWithRestart(String title, String message) {

@@ -142,4 +142,29 @@
     <string name="setting_user_word_delete">Delete</string>
     <string name="setting_user_word_delete_warning">[경고]\n파일이 삭제되며 다시는 복구할 수 없습니다.</string>
 
+    <string name="spa_test_1">Test #1</string>
+    <string name="spa_test_2">Test #2</string>
+    <string name="spa_test_3">Test #3</string>
+    <string name="spa_test_4">Test #4</string>
+    <string name="spa_test_5">Test #5</string>
+    <string name="spa_test_6">Test #6</string>
+    <string name="spa_test_7">Test #7</string>
+    <string name="spa_test_8">Test #8</string>
+    <string name="spa_test_9">Test #9</string>
+    <string name="spa_test_10">Test #10</string>
+
+    <string name="spa_examination_hall_title"> SPA Exam</string>
+    <string name="spa_test_question_1">Question #1</string>
+    <string name="spa_test_question_2">Question #2</string>
+    <string name="spa_test_question_3">Question #3</string>
+    <string name="spa_test_question_4">Question #4</string>
+    <string name="spa_test_play_pause">Play/Pause</string>
+    <string name="spa_test_done">Done</string>
+
+
+
+
+
+
+
 </resources>

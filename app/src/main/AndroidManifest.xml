@@ -96,7 +96,11 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
-
+        <activity
+            android:name=".SpaExaminationHall"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
 
 
 
