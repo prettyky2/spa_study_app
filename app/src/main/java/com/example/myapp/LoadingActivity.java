@@ -37,6 +37,8 @@ public class LoadingActivity extends AppApplication implements View.OnClickListe
     private static final String TAG = "LoadingActivity";
     Button startButton = null;
     private static final int REQUEST_BLUETOOTH_CONNECT = 1001;
+    private static final int REQUEST_MICROPHONE_PERMISSION = 1002;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class LoadingActivity extends AppApplication implements View.OnClickListe
 
         // 🔹 블루투스 권한 요청 추가 (Android 12 이상)
         requestBluetoothPermission();
+        requestMicrophonePermission(); // 🔹 마이크 권한 요청 추가
         copyExcelFileToInternalStorage();
 
     } //onCreate();
@@ -108,6 +111,19 @@ public class LoadingActivity extends AppApplication implements View.OnClickListe
     }
 
     /**
+     * 🔹 마이크 권한 요청 함수 (추가됨)
+     */
+    private void requestMicrophonePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    REQUEST_MICROPHONE_PERMISSION);
+        }
+    }
+
+
+    /**
      * 🔹 권한 요청 결과 처리
      */
     @Override
@@ -119,6 +135,13 @@ public class LoadingActivity extends AppApplication implements View.OnClickListe
             } else {
                 Log.e(TAG, "BLUETOOTH_CONNECT permission denied!");
                 Toast.makeText(this, "블루투스 연결을 사용하려면 권한을 허용해야 합니다.", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == REQUEST_MICROPHONE_PERMISSION) { // 🔹 마이크 권한 처리 추가
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Microphone permission granted!");
+            } else {
+                Log.e(TAG, "Microphone permission denied!");
+                Toast.makeText(this, "음성 인식을 사용하려면 마이크 권한을 허용해야 합니다.", Toast.LENGTH_LONG).show();
             }
         }
     }

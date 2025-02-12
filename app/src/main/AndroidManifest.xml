@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
 
     <application
@@ -102,7 +103,11 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
-
+        <activity
+            android:name=".SpaExaminationResult"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
 
 
 

@@ -160,9 +160,9 @@
     <string name="spa_test_question_4">Question #4</string>
     <string name="spa_test_play_pause">Play/Pause</string>
     <string name="spa_test_done">Done</string>
+    <string name="spa_test_user_answer"> </string>
 
-
-
+    <string name="spa_examination_result_title"> SPA Exam Answer Sheet</string>
 
 
 

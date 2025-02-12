@@ -70,5 +70,11 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("org.apache.poi:poi:5.2.3")
     implementation ("org.apache.poi:poi-ooxml:5.2.3")
+    implementation ("com.google.cloud:google-cloud-speech:2.6.0")
+    implementation ("io.grpc:grpc-okhttp:1.48.1")
+    implementation ("io.grpc:grpc-protobuf:1.48.1")
+    implementation ("io.grpc:grpc-stub:1.48.1")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.6.0")
 
+    
 }

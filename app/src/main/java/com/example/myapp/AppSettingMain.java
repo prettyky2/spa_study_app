@@ -192,11 +192,11 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
         boolean externalDeleted = deleteFileSafely(externalFile);
 
         if (internalDeleted && externalDeleted) {
-            showAlertDialog("삭제 완료", "내부 저장소 및 다운로드 폴더의 user_word.xlsx 파일이 삭제되었습니다.");
+            showAlertDialogWithRestart("삭제 완료", "내부 저장소 및 다운로드 폴더의 user_word.xlsx 파일이 삭제되었습니다.");
         } else if (internalDeleted) {
-            showAlertDialog("삭제 완료", "내부 저장소의 user_word.xlsx 파일만 삭제되었습니다.");
+            showAlertDialogWithRestart("삭제 완료", "내부 저장소의 user_word.xlsx 파일만 삭제되었습니다.");
         } else if (externalDeleted) {
-            showAlertDialog("삭제 완료", "다운로드 폴더의 user_word.xlsx 파일만 삭제되었습니다.");
+            showAlertDialogWithRestart("삭제 완료", "다운로드 폴더의 user_word.xlsx 파일만 삭제되었습니다.");
         } else {
             showAlertDialog("삭제 실패", "삭제할 파일이 없습니다.");
         }
