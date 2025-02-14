@@ -15,11 +15,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/spa_examination_result_title"
-        android:textSize="70sp"
         android:textColor="@color/black"
+        android:textSize="70sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <!-- 스크롤이 필요한 영역 -->
@@ -27,7 +27,7 @@
         android:id="@+id/scrollable_section"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="20dp"
@@ -128,46 +128,56 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/answer_sheet_record_1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/answer_sheet_share_answer"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
-        android:text="♪1"
-        android:textSize="20sp"
-
+        android:text="↗️"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/answer_sheet_record_1"/>
+
+    <Button
+        android:id="@+id/answer_sheet_record_1"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:text="♪1"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/answer_sheet_share_answer"
         app:layout_constraintEnd_toStartOf="@id/answer_sheet_record_2"/>
 
     <Button
         android:id="@+id/answer_sheet_record_2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:text="♪2"
-        android:textSize="20sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/answer_sheet_record_1"
         app:layout_constraintEnd_toStartOf="@id/answer_sheet_record_3"/>
 
     <Button
         android:id="@+id/answer_sheet_record_3"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:text="♪3"
-        android:textSize="20sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/answer_sheet_record_2"
         app:layout_constraintEnd_toStartOf="@id/answer_sheet_record_4"/>
 
     <Button
         android:id="@+id/answer_sheet_record_4"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:text="♪4"
-        android:textSize="20sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/answer_sheet_record_3"
         app:layout_constraintEnd_toEndOf="parent"/>

@@ -158,6 +158,7 @@
     <string name="spa_test_question_2">Question #2</string>
     <string name="spa_test_question_3">Question #3</string>
     <string name="spa_test_question_4">Question #4</string>
+    <string name="spa_test_question_all">Question All</string>
     <string name="spa_test_play_pause">Play/Pause</string>
     <string name="spa_test_done">Done</string>
     <string name="spa_test_user_answer"> </string>
@@ -213,6 +214,9 @@
     <string name="spa_examination_10_question_3">Some say that cars that run on fossil fuel must be banned immediately to protect our environment. What do you think?</string>
     <string name="spa_examination_10_question_4">Please describe the graph in as much detail as you can.</string>
 
+    <string name="dialog_share_title">Select an item to share</string>
+    <string name="spa_text_share">Text</string>
+    <string name="spa_mp3_share">MP3</string>
 
 
 </resources>

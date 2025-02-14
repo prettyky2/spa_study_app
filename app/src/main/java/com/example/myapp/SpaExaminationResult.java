@@ -1,6 +1,7 @@
 package com.example.myapp;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
@@ -9,6 +10,7 @@ import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -43,12 +45,18 @@ import com.google.protobuf.ByteString;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import com.arthenica.mobileffmpeg.FFmpeg;
+import com.arthenica.mobileffmpeg.Config;
+
+import android.os.Handler;
+
 
 public class SpaExaminationResult extends AppApplication implements View.OnClickListener {
 
@@ -68,14 +76,20 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
     private String getIntentAnswer_2 = null;
     private String getIntentAnswer_3 = null;
     private String getIntentAnswer_4 = null;
-    private Button answer_sheet_record_1 = null;
-    private Button answer_sheet_record_2 = null;
-    private Button answer_sheet_record_3 = null;
-    private Button answer_sheet_record_4 = null;
+    private Button answerSheetShareAnswer = null;
+    private Button answerSheetRecord1 = null;
+    private Button answerSheetRecord2 = null;
+    private Button answerSheetRecord3 = null;
+    private Button answerSheetRecord4 = null;
     String recordedAudioFilePath_1;
     String recordedAudioFilePath_2;
     String recordedAudioFilePath_3;
     String recordedAudioFilePath_4;
+    private String combinedQA1;
+    private String combinedQA2;
+    private String combinedQA3;
+    private String combinedQA4;
+    private String combinedQAAll; // Q1+A1+Q2+A2+Q3+A3+Q4+A4 전체 저장
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,14 +120,181 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
         } else if (v.getId() == R.id.answer_sheet_record_4) {
             filePath = recordedAudioFilePath_4;
         }
-
         if (filePath == null) {
             Toast.makeText(this, "녹음된 파일이 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-
         playAudioPCM(filePath);
+
+        if (v.getId() == R.id.answer_sheet_share_answer) {
+            showShareDialog();
+
+        }
     } //onClick();
+
+    private void showShareDialog() {
+        // 다이얼로그 생성
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.activity_app_share_dialog);
+
+        // 다이얼로그 닫기 불가능하도록 설정 (선택 사항)
+        dialog.setCancelable(true);
+        dialog.setOnCancelListener(dialogInterface -> dialog.dismiss());
+
+        // 다이얼로그 뷰 초기화
+        Button btnQuestion1Text = dialog.findViewById(R.id.question_1_text_button);
+        Button btnQuestion2Text = dialog.findViewById(R.id.question_2_text_button);
+        Button btnQuestion3Text = dialog.findViewById(R.id.question_3_text_button);
+        Button btnQuestion4Text = dialog.findViewById(R.id.question_4_text_button);
+        Button btnQuestionAllText = dialog.findViewById(R.id.question_all_text_button);
+        Button btnQuestion1Mp3 = dialog.findViewById(R.id.question_1_mp3_button);
+        Button btnQuestion2Mp3 = dialog.findViewById(R.id.question_2_mp3_button);
+        Button btnQuestion3Mp3 = dialog.findViewById(R.id.question_3_mp3_button);
+        Button btnQuestion4Mp3 = dialog.findViewById(R.id.question_4_mp3_button);
+        Button btnQuestionAllMp3 = dialog.findViewById(R.id.question_all_mp3_button);
+
+
+
+        // 버튼 이벤트 설정
+        // 🔹 텍스트 공유 버튼 이벤트 설정
+        btnQuestion1Text.setOnClickListener(v -> shareText(combinedQA1));
+        btnQuestion2Text.setOnClickListener(v -> shareText(combinedQA2));
+        btnQuestion3Text.setOnClickListener(v -> shareText(combinedQA3));
+        btnQuestion4Text.setOnClickListener(v -> shareText(combinedQA4));
+        btnQuestionAllText.setOnClickListener(v -> shareText(combinedQAAll));
+
+        // 🔹 MP3 공유 버튼 이벤트 설정
+        btnQuestion1Mp3.setOnClickListener(v -> convertAndShareMP3(recordedAudioFilePath_1, "audio_question_1.mp3"));
+        btnQuestion2Mp3.setOnClickListener(v -> convertAndShareMP3(recordedAudioFilePath_2, "audio_question_2.mp3"));
+        btnQuestion3Mp3.setOnClickListener(v -> convertAndShareMP3(recordedAudioFilePath_3, "audio_question_3.mp3"));
+        btnQuestion4Mp3.setOnClickListener(v -> convertAndShareMP3(recordedAudioFilePath_4, "audio_question_4.mp3"));
+        btnQuestionAllMp3.setOnClickListener(v -> convertAndShareAllMP3());
+
+
+        // 다이얼로그 표시
+        dialog.show();
+    }
+
+    private void convertAndShareMP3(String pcmFilePath, String mp3FileName) {
+        if (pcmFilePath == null || pcmFilePath.isEmpty()) {
+            Toast.makeText(this, "녹음된 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File mp3File = new File(getFilesDir(), mp3FileName);
+        String mp3FilePath = mp3File.getAbsolutePath();
+
+        // FFmpeg 명령어 실행 (PCM → MP3 변환)
+        String command = "-f s16le -ar 16000 -ac 1 -i " + pcmFilePath + " " + mp3FilePath;
+
+        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
+            if (returnCode == RETURN_CODE_SUCCESS) {
+                Log.d(TAG, "MP3 변환 완료: " + mp3FilePath);
+                shareAudio(mp3FilePath); // 변환 후 자동으로 공유 실행
+            } else {
+                Log.e(TAG, "MP3 변환 실패");
+                Toast.makeText(this, "MP3 변환 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void convertAndShareAllMP3() {
+        ArrayList<String> pcmFiles = new ArrayList<>();
+        ArrayList<String> mp3Files = new ArrayList<>();
+
+        if (recordedAudioFilePath_1 != null) {
+            pcmFiles.add(recordedAudioFilePath_1);
+            mp3Files.add(getFilesDir() + "/audio_question_1.mp3");
+        }
+        if (recordedAudioFilePath_2 != null) {
+            pcmFiles.add(recordedAudioFilePath_2);
+            mp3Files.add(getFilesDir() + "/audio_question_2.mp3");
+        }
+        if (recordedAudioFilePath_3 != null) {
+            pcmFiles.add(recordedAudioFilePath_3);
+            mp3Files.add(getFilesDir() + "/audio_question_3.mp3");
+        }
+        if (recordedAudioFilePath_4 != null) {
+            pcmFiles.add(recordedAudioFilePath_4);
+            mp3Files.add(getFilesDir() + "/audio_question_4.mp3");
+        }
+
+        if (pcmFiles.isEmpty()) {
+            Toast.makeText(this, "공유할 MP3 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // PCM 파일들을 MP3로 변환하는 FFmpeg 명령어 실행
+        for (int i = 0; i < pcmFiles.size(); i++) {
+            String command = "-f s16le -ar 16000 -ac 1 -i " + pcmFiles.get(i) + " " + mp3Files.get(i);
+            FFmpeg.execute(command);
+        }
+
+        // MP3 변환 후 공유 실행
+        new Handler(Looper.getMainLooper()).postDelayed(() -> shareAllAudio(mp3Files), 3000);
+    }
+
+
+    private void shareText(String text) {
+        if (text == null || text.isEmpty()) {
+            Toast.makeText(this, "공유할 내용이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(shareIntent, "공유 항목을 선택하세요"));
+    }
+
+    private void convertPcmToMp3(String pcmFilePath, String mp3FilePath) {
+        String command = "-f s16le -ar 16000 -ac 1 -i " + pcmFilePath + " " + mp3FilePath;
+
+        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
+            if (returnCode == RETURN_CODE_SUCCESS) {
+                Log.d(TAG, "MP3 변환 완료: " + mp3FilePath);
+            } else {
+                Log.e(TAG, "MP3 변환 실패");
+            }
+        });
+    }
+
+    private void shareAudio(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            Toast.makeText(this, "녹음된 MP3 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            Toast.makeText(this, "MP3 파일을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("audio/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        startActivity(Intent.createChooser(shareIntent, "MP3 파일 공유"));
+    }
+
+    private void shareAllAudio() {
+        ArrayList<Uri> audioUris = new ArrayList<>();
+
+        if (recordedAudioFilePath_1 != null) audioUris.add(Uri.fromFile(new File(recordedAudioFilePath_1)));
+        if (recordedAudioFilePath_2 != null) audioUris.add(Uri.fromFile(new File(recordedAudioFilePath_2)));
+        if (recordedAudioFilePath_3 != null) audioUris.add(Uri.fromFile(new File(recordedAudioFilePath_3)));
+        if (recordedAudioFilePath_4 != null) audioUris.add(Uri.fromFile(new File(recordedAudioFilePath_4)));
+
+        if (audioUris.isEmpty()) {
+            Toast.makeText(this, "공유할 MP3 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.setType("audio/*");
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, audioUris);
+        startActivity(Intent.createChooser(shareIntent, "MP3 파일 여러 개 공유"));
+    }
 
     private void initializeClass() {
         Intent intent = getIntent();
@@ -137,15 +318,17 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
         answerSheetAnswer_3 = findViewById(R.id.answer_sheet_answer_3);
         answerSheetAnswer_4 = findViewById(R.id.answer_sheet_answer_4);
         answerSheetImage_1 = findViewById(R.id.answer_sheet_image_1);
-        answer_sheet_record_1 = findViewById(R.id.answer_sheet_record_1);
-        answer_sheet_record_2 = findViewById(R.id.answer_sheet_record_2);
-        answer_sheet_record_3 = findViewById(R.id.answer_sheet_record_3);
-        answer_sheet_record_4 = findViewById(R.id.answer_sheet_record_4);
+        answerSheetShareAnswer = findViewById(R.id.answer_sheet_share_answer);
+        answerSheetRecord1 = findViewById(R.id.answer_sheet_record_1);
+        answerSheetRecord2 = findViewById(R.id.answer_sheet_record_2);
+        answerSheetRecord3 = findViewById(R.id.answer_sheet_record_3);
+        answerSheetRecord4 = findViewById(R.id.answer_sheet_record_4);
 
-        answer_sheet_record_1.setOnClickListener(this);
-        answer_sheet_record_2.setOnClickListener(this);
-        answer_sheet_record_3.setOnClickListener(this);
-        answer_sheet_record_4.setOnClickListener(this);
+        answerSheetShareAnswer.setOnClickListener(this);
+        answerSheetRecord1.setOnClickListener(this);
+        answerSheetRecord2.setOnClickListener(this);
+        answerSheetRecord3.setOnClickListener(this);
+        answerSheetRecord4.setOnClickListener(this);
 
 
         setQuestionAndAnswer(getIntentQuestionNum);
@@ -157,6 +340,8 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
     }
 
     private void setQuestionAndAnswer(int examNum) {
+        StringBuilder qaBuilderAll = new StringBuilder(); // 전체 Q&A 저장용
+
         for (int i = 1; i <= 4; i++) {
             // 🔹 동적으로 리소스 ID 가져오기
             String questionResourceName = "spa_examination_" + examNum + "_question_" + i;
@@ -182,6 +367,54 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
                 answerView.setText(intentAnswer != null ? intentAnswer : "No Answer");
             }
         }
+
+        for (int i = 1; i <= 4; i++) {
+            // 🔹 질문 가져오기
+            String questionResourceName = "spa_examination_" + examNum + "_question_" + i;
+            int questionResId = getResources().getIdentifier(questionResourceName, "string", getPackageName());
+            String questionText = (questionResId != 0) ? getResources().getString(questionResId) : "Question not found";
+
+            // 🔹 답변 가져오기
+            String answerText = getIntent().getStringExtra("answer_" + i);
+            if (answerText == null) {
+                answerText = "No Answer"; // 답변이 없는 경우 기본값 설정
+            }
+
+            // 🔹 TextView에 설정
+            int textViewResId = getResources().getIdentifier("answer_sheet_question_" + i, "id", getPackageName());
+            int answerViewResId = getResources().getIdentifier("answer_sheet_answer_" + i, "id", getPackageName());
+            TextView questionView = findViewById(textViewResId);
+            TextView answerView = findViewById(answerViewResId);
+
+            if (questionView != null) questionView.setText(questionText);
+            if (answerView != null) answerView.setText(answerText);
+
+            // 🔹 개별 Q&A 저장
+            String combinedQA = "Q" + i + ": " + questionText + "\n" +
+                    "A" + i + ": " + answerText + "\n\n";
+
+            switch (i) {
+                case 1:
+                    combinedQA1 = combinedQA;
+                    break;
+                case 2:
+                    combinedQA2 = combinedQA;
+                    break;
+                case 3:
+                    combinedQA3 = combinedQA;
+                    break;
+                case 4:
+                    combinedQA4 = combinedQA;
+                    break;
+            }
+
+            // 🔹 전체 Q&A 문자열에 추가
+            qaBuilderAll.append(combinedQA);
+        }
+
+        // 🔹 최종적으로 전체 Q&A 저장
+        combinedQAAll = qaBuilderAll.toString();
+        Log.d(TAG, "Combined Q&A (All): \n" + combinedQAAll);
 
         // 🔹 이미지 설정
         int imageResId = getResources().getIdentifier("spa_test_" + examNum, "drawable", getPackageName());

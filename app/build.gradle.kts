@@ -74,7 +74,7 @@ dependencies {
     implementation ("io.grpc:grpc-okhttp:1.48.1")
     implementation ("io.grpc:grpc-protobuf:1.48.1")
     implementation ("io.grpc:grpc-stub:1.48.1")
-    implementation("com.google.auth:google-auth-library-oauth2-http:1.6.0")
-
+    implementation ("com.google.auth:google-auth-library-oauth2-http:1.6.0")
+    implementation ("com.arthenica:mobile-ffmpeg-full:4.0")
     
 }
