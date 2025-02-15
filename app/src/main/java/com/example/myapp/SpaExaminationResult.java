@@ -52,10 +52,14 @@ import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import com.arthenica.mobileffmpeg.FFmpeg;
-import com.arthenica.mobileffmpeg.Config;
+
 
 import android.os.Handler;
+
+import com.github.adrielcafe.androidaudioconverter.AndroidAudioConverter;
+import com.github.adrielcafe.androidaudioconverter.callback.IConvertCallback;
+import com.github.adrielcafe.androidaudioconverter.model.AudioFormat;
+import com.github.
 
 
 public class SpaExaminationResult extends AppApplication implements View.OnClickListener {
@@ -177,25 +181,36 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
 
     private void convertAndShareMP3(String pcmFilePath, String mp3FileName) {
         if (pcmFilePath == null || pcmFilePath.isEmpty()) {
-            Toast.makeText(this, "녹음된 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "녹음된 PCM 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File pcmFile = new File(pcmFilePath);
+        if (!pcmFile.exists()) {
+            Toast.makeText(this, "PCM 파일을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         File mp3File = new File(getFilesDir(), mp3FileName);
-        String mp3FilePath = mp3File.getAbsolutePath();
 
-        // FFmpeg 명령어 실행 (PCM → MP3 변환)
-        String command = "-f s16le -ar 16000 -ac 1 -i " + pcmFilePath + " " + mp3FilePath;
+        // PCM -> MP3 변환
+        AndroidAudioConverter.with(this)
+                .setFile(pcmFile)
+                .setFormat(AudioFormat.MP3)
+                .setCallback(new IConvertCallback() {
+                    @Override
+                    public void onSuccess(File convertedFile) {
+                        Log.d(TAG, "MP3 변환 성공: " + convertedFile.getAbsolutePath());
+                        shareAudio(convertedFile.getAbsolutePath()); // 변환 성공 후 자동 공유
+                    }
 
-        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
-            if (returnCode == RETURN_CODE_SUCCESS) {
-                Log.d(TAG, "MP3 변환 완료: " + mp3FilePath);
-                shareAudio(mp3FilePath); // 변환 후 자동으로 공유 실행
-            } else {
-                Log.e(TAG, "MP3 변환 실패");
-                Toast.makeText(this, "MP3 변환 실패", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(Exception error) {
+                        Log.e(TAG, "MP3 변환 실패", error);
+                        Toast.makeText(SpaExaminationResult.this, "MP3 변환 실패", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .convert();
     }
 
     private void convertAndShareAllMP3() {
@@ -224,14 +239,12 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
             return;
         }
 
-        // PCM 파일들을 MP3로 변환하는 FFmpeg 명령어 실행
         for (int i = 0; i < pcmFiles.size(); i++) {
-            String command = "-f s16le -ar 16000 -ac 1 -i " + pcmFiles.get(i) + " " + mp3Files.get(i);
-            FFmpeg.execute(command);
-        }
+            String pcmFilePath = pcmFiles.get(i);
+            String mp3FilePath = mp3Files.get(i);
 
-        // MP3 변환 후 공유 실행
-        new Handler(Looper.getMainLooper()).postDelayed(() -> shareAllAudio(mp3Files), 3000);
+            convertAndShareMP3(pcmFilePath, mp3FilePath);
+        }
     }
 
 
@@ -247,21 +260,11 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
         startActivity(Intent.createChooser(shareIntent, "공유 항목을 선택하세요"));
     }
 
-    private void convertPcmToMp3(String pcmFilePath, String mp3FilePath) {
-        String command = "-f s16le -ar 16000 -ac 1 -i " + pcmFilePath + " " + mp3FilePath;
 
-        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
-            if (returnCode == RETURN_CODE_SUCCESS) {
-                Log.d(TAG, "MP3 변환 완료: " + mp3FilePath);
-            } else {
-                Log.e(TAG, "MP3 변환 실패");
-            }
-        });
-    }
 
     private void shareAudio(String filePath) {
         if (filePath == null || filePath.isEmpty()) {
-            Toast.makeText(this, "녹음된 MP3 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "MP3 파일이 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -274,7 +277,7 @@ public class SpaExaminationResult extends AppApplication implements View.OnClick
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("audio/*");
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        startActivity(Intent.createChooser(shareIntent, "MP3 파일 공유"));
+        startActivity(Intent.createChooser(shareIntent, "MP3 공유"));
     }
 
     private void shareAllAudio() {
