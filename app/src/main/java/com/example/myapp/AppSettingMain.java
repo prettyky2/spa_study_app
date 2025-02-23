@@ -28,8 +28,10 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
     private static final String TAG = "DailyStudyPractice";
     private double tts_speed = 1.0;
     TextView tts_speed_view = null;
+    TextView spa_test_answer_second;
     private static final String PREFS_NAME = "AppSettings";
     private static final String KEY_TTS_SPEED = "tts_speed";
+    private static final int SPA_TEST_ANSWER_SECOND = 60;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +46,47 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
 
         initializeClass();
 
-
-
     } //onCreate();
+
+    private void initializeClass() {
+        tts_speed_view = findViewById(R.id.setting_tts_speed);
+        spa_test_answer_second = findViewById(R.id.setting_spa_test_answer_second);
+
+        Button tts_speed_down = findViewById(R.id.btn_tts_speed_down);
+        Button tts_speed_up = findViewById(R.id.btn_tts_speed_up);
+        Button backupButton = findViewById(R.id.btn_backup);
+        Button reloadButton = findViewById(R.id.btn_reload);
+        Button deleteButton = findViewById(R.id.btn_delete);
+        Button spa_test_answer_second_1minute = findViewById(R.id.btn_spa_test_answer_second_1minute);
+        Button spa_test_answer_second_2minute = findViewById(R.id.btn_spa_test_answer_second_2minute);
+
+        tts_speed_down.setOnClickListener(this);
+        tts_speed_up.setOnClickListener(this);
+        backupButton.setOnClickListener(this);
+        reloadButton.setOnClickListener(this);
+        deleteButton.setOnClickListener(this);
+        spa_test_answer_second_1minute.setOnClickListener(this);
+        spa_test_answer_second_2minute.setOnClickListener(this);
+
+        // SharedPreferences에서 저장된 속도 불러오기
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        tts_speed = prefs.getFloat(KEY_TTS_SPEED, 1.0f); // 기본값 1.0
+        // UI 업데이트
+        tts_speed_view.setText(String.format("%.1f", tts_speed));
+        // TTSPlayer에 적용
+        AppTTSPlayer.getInstance(this).setTTSAudioSpeed(tts_speed);
+        spa_test_answer_second.setText(String.valueOf(SPA_TEST_ANSWER_SECOND));
+
+
+        int savedSpaTestAnswerSecond = prefs.getInt("spa_test_answer_second", 60); // 기본값 60초
+        spa_test_answer_second.setText(String.valueOf(savedSpaTestAnswerSecond));
+    }
 
     @Override
     public void onClick(View v) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
         if (v.getId() == R.id.btn_tts_speed_down) {
             if (tts_speed > 0.5) {
                 tts_speed = Math.max(0.5, Math.round((tts_speed - 0.1) * 10) / 10.0);
@@ -58,6 +95,14 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
             if (tts_speed < 1.5) {
                 tts_speed = Math.min(1.5, Math.round((tts_speed + 0.1) * 10) / 10.0);
             }
+        } else if (v.getId() == R.id.btn_spa_test_answer_second_1minute) {
+            editor.putInt("spa_test_answer_second", 60);
+            spa_test_answer_second.setText(String.valueOf(60));
+            editor.apply();
+        } else if (v.getId() == R.id.btn_spa_test_answer_second_2minute) {
+            editor.putInt("spa_test_answer_second", 120);
+            spa_test_answer_second.setText(String.valueOf(120));
+            editor.apply();
         } else if (v.getId() == R.id.btn_backup) {
             backupExcelFile();
         } else if (v.getId() == R.id.btn_reload) {
@@ -70,8 +115,6 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
         tts_speed_view.setText(String.format("%.1f", tts_speed));
 
         // 변경된 속도 저장
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
         editor.putFloat(KEY_TTS_SPEED, (float) tts_speed);
         editor.apply(); // 비동기 저장
 
@@ -105,32 +148,6 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
 
         // 다이얼로그 표시
         dialog.show();
-    }
-
-    private void initializeClass() {
-
-        tts_speed_view = findViewById(R.id.setting_tts_speed);
-        Button tts_speed_down = findViewById(R.id.btn_tts_speed_down);
-        Button tts_speed_up = findViewById(R.id.btn_tts_speed_up);
-        Button backupButton = findViewById(R.id.btn_backup);
-        Button reloadButton = findViewById(R.id.btn_reload);
-        Button deleteButton = findViewById(R.id.btn_delete);
-
-        tts_speed_down.setOnClickListener(this);
-        tts_speed_up.setOnClickListener(this);
-        backupButton.setOnClickListener(this);
-        reloadButton.setOnClickListener(this);
-        deleteButton.setOnClickListener(this);
-
-        // SharedPreferences에서 저장된 속도 불러오기
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        tts_speed = prefs.getFloat(KEY_TTS_SPEED, 1.0f); // 기본값 1.0
-
-        // UI 업데이트
-        tts_speed_view.setText(String.format("%.1f", tts_speed));
-
-        // TTSPlayer에 적용
-        AppTTSPlayer.getInstance(this).setTTSAudioSpeed(tts_speed);
     }
 
     private void backupExcelFile() {
@@ -247,10 +264,5 @@ public class AppSettingMain extends AppApplication implements View.OnClickListen
                 .setPositiveButton("OK", null)
                 .show();
     }
-
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package com.example.myapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -92,7 +93,7 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
     private TextView userAnswer = null;
     private int testNum = 0;
     private int currentIndex = 1;
-    private int remainingTime = 120;
+    private int remainingTime = 30;
     private boolean isPaused = false;
     private boolean isMediaPlaying = false;
     private boolean isMediaPlayNow = false;
@@ -114,7 +115,7 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
     private String recordedAudioFilePath_2;
     private String recordedAudioFilePath_3;
     private String recordedAudioFilePath_4;
-
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +143,10 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
     } //onClick();
 
     private void initializeClass() {
+        // SharedPreferences에서 저장된 시간 값을 불러옴 (기본값 120초)
+        prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
+        remainingTime = prefs.getInt("spa_test_answer_second", 120); // 설정된 값 사용
+
         // Intent에서 값 가져오기 (기본값 -1 설정: 값이 없을 경우 대비)
         testNum = getIntent().getIntExtra("test_num", -1);
 
@@ -160,6 +165,8 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
 
         updateQuestionTextImage();
         viewImage.setVisibility(View.GONE);
+
+        deleteOldMergedFiles(testNum);
 
         // ✅ GoogleCredentials을 한 번만 로드하여 저장
         try {
@@ -180,6 +187,23 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
                     REQUEST_RECORD_AUDIO_PERMISSION);
         }
 
+    }
+
+    private void deleteOldMergedFiles(int testNum) {
+        File internalDir = getFilesDir();
+        File[] files = internalDir.listFiles();  // 내부 저장소의 모든 파일 가져오기
+
+        if (files == null) {
+            Log.e(TAG, "내부 저장소를 확인할 수 없습니다.");
+            return;
+        }
+
+        for (File file : files) {
+            if (file.getName().matches("merged_" + testNum + "_\\d+.mp3")) {
+                boolean deleted = file.delete();
+                Log.d(TAG, "삭제된 파일: " + file.getAbsolutePath() + " - 성공 여부: " + deleted);
+            }
+        }
     }
 
     @Override
@@ -245,7 +269,10 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
             @Override
             public void onTick(long millisUntilFinished) {
                 remainingTime = (int) (millisUntilFinished / 1000);
-                progressBar.setProgress(100 - (int) ((remainingTime / 120.0) * 100)); // 왼쪽부터 감소
+                // ✅ 프로그래스바가 설정된 시간을 기준으로 자연스럽게 채워지도록 조정
+                int progress = 100 - (int) ((remainingTime / (double) prefs.getInt("spa_test_answer_second", 120)) * 100);
+                progressBar.setProgress(progress);
+                //progressBar.setProgress(100 - (int) ((remainingTime / 120.0) * 100)); // 왼쪽부터 감소
                 if (remainingTime <= 10) {
                     playPause.setEnabled(false);
                     playNext.setEnabled(false);
@@ -256,13 +283,23 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
             public void onFinish() {
                 Log.d(TAG, "Countdown finished. Stopping speech recognition.");
 
+                int nowIndex = currentIndex;
                 stopSpeechRecognition(); // ✅ 음성 인식 종료
-                saveUserAnswer(); // ✅ 저장
-                runOnUiThread(() -> userAnswer.setText("")); // ✅ userAnswer 초기화
-
                 stopRecording();
 
+                // 🔹 음성 인식이 완전히 종료될 때까지 500ms 대기 후 `saveUserAnswer()` 실행
+                // ✅ 500ms 후 `saveUserAnswer()` 실행하여 추가된 단어가 다음 문제로 넘어가는 것을 방지
+                new android.os.Handler().postDelayed(() -> {
+                    saveUserAnswer(nowIndex); // ✅ 저장
+                    runOnUiThread(() -> {
+                        userAnswer.setText("");
+                        lastRecognizedText = "";  // ✅ 다음 문제로 넘어갈 때 이전 인식된 텍스트도 초기화
+                    });
+                }, 700); // 🔹 0.7초 지연 실행
+
+
                 if (currentIndex == 4) {
+                    saveUserAnswer(currentIndex); // ✅ 저장
                     Intent intent = new Intent(SpaExaminationHall.this, SpaExaminationResult.class);
                     intent.putExtra("test_num", testNum);
                     intent.putExtra("answer_1", answer_1);
@@ -280,7 +317,7 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
                     //new android.os.Handler().postDelayed(() -> finish(), 500);
                 } else {
                     currentIndex++;
-                    remainingTime = 120;
+                    remainingTime = prefs.getInt("spa_test_answer_second", 120);
                     playPause.setEnabled(true);
                     playNext.setEnabled(true);
                     updateQuestionTextImage();
@@ -482,7 +519,22 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
     }
 
     private void skipToNext() {
+        int nowIndex = currentIndex;
+        // 음성 인식 종료 및 텍스트 저장
+        stopSpeechRecognition(); // ✅ 음성 인식 종료
+        stopRecording();
+
+        // ✅ 500ms 후 `saveUserAnswer()` 실행하여 추가된 단어가 다음 문제로 넘어가는 것을 방지
+        new android.os.Handler().postDelayed(() -> {
+            saveUserAnswer(nowIndex); // ✅ 저장
+            runOnUiThread(() -> {
+                userAnswer.setText("");
+                lastRecognizedText = "";  // ✅ 다음 문제로 넘어갈 때 이전 인식된 텍스트도 초기화
+            });
+        }, 700); // 🔹 0.7초 지연 실행
+
         if (currentIndex == 4) {
+            saveUserAnswer(currentIndex); // ✅ 저장
             Intent intent = new Intent(SpaExaminationHall.this, SpaExaminationResult.class);
             intent.putExtra("test_num", testNum);
             intent.putExtra("answer_1", answer_1);
@@ -501,13 +553,6 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
             return;
         }
 
-        // 음성 인식 종료 및 텍스트 저장
-        stopSpeechRecognition(); // ✅ 음성 인식 종료
-        saveUserAnswer(); // ✅ 저장
-        runOnUiThread(() -> userAnswer.setText("")); // ✅ userAnswer 초기화
-
-        stopRecording();
-
         // 미디어가 재생 중이면 정지
         if (mediaPlayer != null && isMediaPlaying) {
             mediaPlayer.stop();
@@ -522,7 +567,7 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
         }
 
         // 남은 시간을 초기화
-        remainingTime = 120;
+        remainingTime = prefs.getInt("spa_test_answer_second", 120); // 설정된 값 사용
 
         // 다음 질문으로 이동
         currentIndex++;
@@ -536,12 +581,12 @@ public class SpaExaminationHall extends AppApplication implements View.OnClickLi
     }
 
     // 사용자의 음성 인식 결과 저장
-    private void saveUserAnswer() {
+    private void saveUserAnswer(int nowIndex) {
         String answer = lastRecognizedText.trim(); // 🔹 최종 인식된 문장을 저장
         Log.d(TAG, "Saving user answer: " + answer);
 
         if (!answer.isEmpty()) {
-            switch (currentIndex) {
+            switch (nowIndex) {
                 case 1:
                     answer_1 = answer;
                     break;

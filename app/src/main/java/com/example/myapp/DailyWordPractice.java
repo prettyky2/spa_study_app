@@ -159,7 +159,7 @@ public class DailyWordPractice extends AppApplication implements View.OnClickLis
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.activity_app_dialog);
 
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setOnCancelListener(dialogInterface -> dialog.dismiss());
 
         // 다이얼로그 뷰 초기화

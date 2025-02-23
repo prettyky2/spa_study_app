@@ -29,7 +29,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "META-INF/INDEX.LIST"
             excludes += "META-INF/LICENSE"
@@ -71,11 +71,11 @@ dependencies {
     implementation ("org.apache.poi:poi:5.2.3")
     implementation ("org.apache.poi:poi-ooxml:5.2.3")
     implementation ("com.google.cloud:google-cloud-speech:2.6.0")
-    implementation ("io.grpc:grpc-okhttp:1.48.1")
     implementation ("io.grpc:grpc-protobuf:1.48.1")
     implementation ("io.grpc:grpc-stub:1.48.1")
     implementation ("com.google.auth:google-auth-library-oauth2-http:1.6.0")
-    implementation ("com.github.adrielcafe:AndroidAudioConverter:0.0.8")
-    implementation ("com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.19")
-    
+    implementation ("androidx.media3:media3-exoplayer:1.1.0")
+    implementation ("androidx.media3:media3-exoplayer-hls:1.1.0")
+    implementation ("androidx.media3:media3-ui:1.1.0")
+    implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
 }

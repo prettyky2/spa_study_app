@@ -13,7 +13,7 @@
         android:id="@+id/setting_page_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:text="@string/main_page_sub_title_app_setting"
         android:textSize="100sp"
         android:textColor="@color/black"
@@ -25,7 +25,7 @@
         android:id="@+id/setting_tts_speed_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
         android:text="@string/setting_tts_speed"
         android:textSize="50sp"
@@ -37,7 +37,7 @@
         android:id="@+id/setting_tts_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
         android:text="@string/setting_tts_speed"
         android:textSize="50sp"
@@ -83,15 +83,78 @@
         app:layout_constraintLeft_toRightOf="@id/btn_backup"/>
 
     <TextView
+        android:id="@+id/setting_spa_test_answer_second_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
+        android:text="@string/setting_spa_test_answer_second"
+        android:textSize="50sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/btn_tts_speed_down"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/setting_spa_test_answer_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
+        android:text="@string/setting_tts_speed"
+        android:textSize="50sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/btn_tts_speed_down"
+        app:layout_constraintLeft_toRightOf="@id/setting_spa_test_answer_second_title"/>
+
+    <TextView
+        android:id="@+id/setting_spa_test_answer_second_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
+        android:text="@string/setting_spa_test_answer_second_description"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/setting_spa_test_answer_second_title"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_spa_test_answer_second_1minute"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:text="@string/setting_spa_test_answer_second_1minute"
+        android:textSize="25sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/setting_spa_test_answer_second_description"
+        app:layout_constraintRight_toLeftOf="@id/btn_spa_test_answer_second_2minute"/>
+
+    <Button
+        android:id="@+id/btn_spa_test_answer_second_2minute"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:text="@string/setting_spa_test_answer_second_2minute"
+        android:textSize="25sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="50dp"
+        app:layout_constraintTop_toBottomOf="@id/setting_spa_test_answer_second_description"
+        app:layout_constraintLeft_toRightOf="@id/btn_spa_test_answer_second_1minute"/>
+
+
+
+    <TextView
         android:id="@+id/setting_user_word_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
         android:text="@string/setting_user_word"
         android:textSize="50sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/btn_tts_speed_down"
+        app:layout_constraintTop_toBottomOf="@id/btn_spa_test_answer_second_1minute"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView

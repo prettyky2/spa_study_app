@@ -132,9 +132,13 @@
             <string name="describe_graph_photo_21_sell_object_3">Case_#3</string>
 
     <string name="setting_tts_speed">TTS Speed : </string>
-    <string name="setting_tts_speed_description">You can control TTS sound speed here.\n x0.5 ~ x1.5</string>
+    <string name="setting_tts_speed_description">You can control TTS sound speed here.(x0.5 ~ x1.5)</string>
     <string name="setting_tts_speed_down"> ◀◀ </string>
     <string name="setting_tts_speed_up"> ▶▶ </string>
+    <string name="setting_spa_test_answer_second">SPA Test Answer Time : </string>
+    <string name="setting_spa_test_answer_second_description">You can control Answer Time here.</string>
+    <string name="setting_spa_test_answer_second_1minute">1 Minute</string>
+    <string name="setting_spa_test_answer_second_2minute">2 Minute</string>
     <string name="setting_user_word">User Word : </string>
     <string name="setting_user_word_description">Before reinstall program, backup your vocabulary.\nAnd when you reinstall App, reload your vocabulary.</string>
     <string name="setting_user_word_backup">Backup</string>
