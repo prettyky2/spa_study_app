@@ -37,6 +37,8 @@ android {
             excludes += "META-INF/NOTICE"
             excludes += "META-INF/NOTICE.txt"
             excludes += "META-INF/DEPENDENCIES"
+
+
         }
     }
 
@@ -77,5 +79,9 @@ dependencies {
     implementation ("androidx.media3:media3-exoplayer:1.1.0")
     implementation ("androidx.media3:media3-exoplayer-hls:1.1.0")
     implementation ("androidx.media3:media3-ui:1.1.0")
-    implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
+    implementation ("com.arthenica:ffmpeg-kit-full:6.0-2")
+    implementation ("org.jsoup:jsoup:1.15.3")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation ("com.airbnb.android:lottie:6.0.0")
+
 }

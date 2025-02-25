@@ -10,7 +10,7 @@
     <string name="main_page_sub_title_daily_test">Daily Test</string>
     <string name="main_page_sub_title_grammar_practice">Grammar Practice</string>
     <string name="main_page_sub_title_spa_test">SPA Test</string>
-    <string name="main_page_sub_title_top_gun">TOPGUN</string>
+    <string name="main_page_sub_title_america_headline">America Headline</string>
     <string name="main_page_sub_title_app_setting">Setting</string>
 
 
@@ -222,5 +222,7 @@
     <string name="spa_text_share">Text</string>
     <string name="spa_mp3_share">MP3</string>
 
+    <string name="america_headline_policy">Policy"</string>
+    <string name="america_headline_technology">Tech"</string>
 
 </resources>
