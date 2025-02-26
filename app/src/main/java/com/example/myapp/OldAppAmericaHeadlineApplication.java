@@ -1,48 +1,24 @@
 package com.example.myapp;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.os.Bundle;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.app.Application;
-import android.util.Log;
+
 import java.io.File;
-import android.os.Bundle;
+
 import android.os.AsyncTask;
-import android.view.View;
-
-import android.util.Log;
-
-import android.widget.Button;
-
-import android.widget.TextView;
-import android.widget.ImageView;
-
-import androidx.activity.EdgeToEdge;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.bumptech.glide.Glide;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import com.airbnb.lottie.LottieAnimationView;
-
-
-public class AppAmericaHeadlineApplication extends Application {
+/*
+public class OldAppAmericaArticleApplication extends Application {
 
     private static final String TAG = "AppAmericaHeadlineApplication";
 
@@ -52,7 +28,7 @@ public class AppAmericaHeadlineApplication extends Application {
     private String politicsImageUrl, technologyImageUrl;
     private AppAmericanHeadlineTTSPlayer ttsPlayer;
 
-    private static AppAmericaHeadlineApplication instance;
+    private static AppAmericaArticleApplication instance;
 
     // 🔹 Getter 메서드 추가 (데이터를 읽기만 가능하게)
     public String getPoliticsTitle() { return politicsTitle; }
@@ -76,14 +52,14 @@ public class AppAmericaHeadlineApplication extends Application {
         }
 
         // 🔹 크롤링 실행 (앱 시작 시 한 번만)
-        new AppAmericaHeadlineApplication.FetchHeadlineTask().execute(
+        new AppAmericaArticleApplication.FetchHeadlineTask().execute(
                 "https://www.npr.org/sections/politics/",
                 "https://www.npr.org/sections/technology/"
         );
     }
 
     // 🔹 싱글턴 인스턴스를 반환하는 메서드 추가
-    public static AppAmericaHeadlineApplication getInstance() {
+    public static AppAmericaArticleApplication getInstance() {
         return instance;
     }
 
@@ -157,9 +133,9 @@ public class AppAmericaHeadlineApplication extends Application {
 
     // 🔹 `AsyncTask`를 `static` 클래스로 변경 (메모리 누수 방지)
     private static class TTSAsyncTask extends AsyncTask<Void, Void, Void> {
-        private final WeakReference<AppAmericaHeadlineApplication> appRef;
+        private final WeakReference<AppAmericaArticleApplication> appRef;
 
-        TTSAsyncTask(AppAmericaHeadlineApplication app) {
+        TTSAsyncTask(AppAmericaArticleApplication app) {
             Log.d(TAG, "TTSAsyncTask");
             this.appRef = new WeakReference<>(app);
         }
@@ -178,7 +154,7 @@ public class AppAmericaHeadlineApplication extends Application {
         @Override
         protected Void doInBackground(Void... voids) {
             Log.d(TAG, "doInBackground");
-            AppAmericaHeadlineApplication app = appRef.get();
+            AppAmericaArticleApplication app = appRef.get();
             if (app == null) return null; // 앱이 종료되었으면 작업 중단
 
             // 🔹 ttsPlayer가 null인지 확인
@@ -242,7 +218,7 @@ public class AppAmericaHeadlineApplication extends Application {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            AppAmericaHeadlineApplication app = appRef.get();
+            AppAmericaArticleApplication app = appRef.get();
             if (app != null) {
                 app.AmericaHeadlineCrawlingDone = 1;
                 Log.d(TAG, "✅ TTS 파일 생성 완료, AmericaHeadlineCrawlingDone = 1");
@@ -274,3 +250,4 @@ public class AppAmericaHeadlineApplication extends Application {
 
 
 }
+*/

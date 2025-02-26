@@ -58,7 +58,7 @@ public class MainPageActivity extends AppApplication implements View.OnClickList
             Intent intent = new Intent(this, SpaTestMain.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_topgun) {
-            Intent intent = new Intent(this, AmericanHeadline.class);
+            Intent intent = new Intent(this, AmericanArticleTitle.class);
             startActivity(intent);
         } else if (v.getId() == R.id.main_page_sub_title_setting) {
             Intent intent = new Intent(this, AppSettingMain.class);

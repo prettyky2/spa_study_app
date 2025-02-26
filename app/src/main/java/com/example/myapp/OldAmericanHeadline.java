@@ -1,40 +1,29 @@
 package com.example.myapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.AsyncTask;
-import android.view.View;
-
 import android.util.Log;
-
+import android.view.View;
 import android.widget.Button;
-
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
 import java.io.File;
-import java.io.IOException;
 
-import com.airbnb.lottie.LottieAnimationView;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-
-
-public class AmericanHeadline extends AppApplication implements View.OnClickListener {
+/*
+public class OldAmericanHeadline extends AppApplication implements View.OnClickListener {
 
     public static final String TAG = "AmericanHeadline";
     private TextView HeadlineTitle;
@@ -219,3 +208,4 @@ public class AmericanHeadline extends AppApplication implements View.OnClickList
 
 
 }
+*/
