@@ -91,8 +91,6 @@ public class AmericanArticleTitle extends AppApplication implements View.OnClick
         article_9.setOnClickListener(this);
         article_10.setOnClickListener(this);
 
-
-
         if(AppAmericaArticleApplication.getInstance().AmericaHeadlineCrawlingDone == 1) {
             loading_background.setVisibility(View.GONE);
             loadingProgress.setVisibility(View.GONE);
@@ -104,27 +102,27 @@ public class AmericanArticleTitle extends AppApplication implements View.OnClick
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, AmericanArticleMain.class);
-        int article_number = 0;
+        int article_number = -1;
         if(v.getId() == R.id.article_1) {
-            article_number = 1;
+            article_number = 0;
         } else if(v.getId() == R.id.article_2) {
-            article_number = 2;
+            article_number = 1;
         } else if(v.getId() == R.id.article_3) {
-            article_number = 3;
+            article_number = 2;
         } else if(v.getId() == R.id.article_4) {
-            article_number = 4;
+            article_number = 3;
         } else if(v.getId() == R.id.article_5) {
-            article_number = 5;
+            article_number = 4;
         } else if(v.getId() == R.id.article_6) {
-            article_number = 6;
+            article_number = 5;
         } else if(v.getId() == R.id.article_7) {
-            article_number = 7;
+            article_number = 6;
         } else if(v.getId() == R.id.article_8) {
-            article_number = 8;
+            article_number = 7;
         } else if(v.getId() == R.id.article_9) {
-            article_number = 9;
+            article_number = 8;
         } else if(v.getId() == R.id.article_10) {
-            article_number = 10;
+            article_number = 9;
         }
         intent.putExtra("article_number", article_number); // 선택한 묶음의 인덱스
         startActivity(intent);

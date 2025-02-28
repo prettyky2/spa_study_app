@@ -227,5 +227,9 @@
     <string name="america_headline_technology">Tech</string>
 
     <string name="article_title_initialize">Empty Article</string>
+    <string name="article_play">Play</string>
+    <string name="article_stop">Stop</string>
+    <string name="article_translate_korea">번역</string>
+    <string name="article_translate_english">Translate</string>
 
 </resources>

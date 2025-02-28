@@ -3,59 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/daily_study_practice_activity"
+    android:id="@+id/america_article_practice_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".DailyStudyMain">
+    tools:context=".AmericanArticlePractice">
 
     <!-- 타이틀 -->
     <TextView
-        android:id="@+id/daily_study_practice_title"
-        android:layout_width="wrap_content"
+        android:id="@+id/america_article_practice_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
         android:text="@string/main_page_sub_title_daily_study"
-        android:textSize="100sp"
+        android:textSize="50sp"
+        android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageView
-        android:id="@+id/daily_study_practice_image"
-        android:layout_width="500dp"
-        android:layout_height="300dp"
-        android:src="@drawable/graph_1_bar_1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/daily_study_practice_title"/>
-
     <TextView
-        android:id="@+id/example_interpretation"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:text= "@string/example_interpretation"
-        android:textSize="50sp"
-        android:textColor="@color/black"
-        android:maxLines="5"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="20dp"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="20sp"
-        android:autoSizeMaxTextSize="50sp"
-        android:autoSizeStepGranularity="2sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/daily_study_practice_image"/>
-
-    <TextView
-        android:id="@+id/example_sentence"
+        android:id="@+id/america_article_example_sentence"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:text= "@string/example_sentence"
         android:textSize="50sp"
         android:textColor="@color/black"
         android:maxLines="5"
+        android:layout_marginTop="50dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="20dp"
         android:autoSizeTextType="uniform"
@@ -67,10 +44,30 @@
         android:longClickable="true"
         android:textIsSelectable="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/example_interpretation"/>
+        app:layout_constraintTop_toBottomOf="@id/america_article_practice_title"/>
+
+    <TextView
+        android:id="@+id/america_article_example_interpretation"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:text= "@string/example_interpretation"
+        android:textSize="50sp"
+        android:textColor="@color/black"
+        android:maxLines="5"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="20dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="20sp"
+        android:autoSizeMaxTextSize="50sp"
+        android:autoSizeStepGranularity="2sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/america_article_example_sentence"/>
+
+
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress_bar"
+        android:id="@+id/america_article_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:max="100"

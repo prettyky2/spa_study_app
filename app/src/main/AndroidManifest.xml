@@ -137,6 +137,13 @@
             android:theme="@style/Theme.Spa_study_app">
         </activity>
 
+        <activity
+            android:name=".AmericanArticlePractice"
+            android:exported="true"
+            android:theme="@style/Theme.Spa_study_app">
+        </activity>
+
+
     </application>
 
 </manifest>

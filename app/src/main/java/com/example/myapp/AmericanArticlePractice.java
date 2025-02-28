@@ -1,39 +1,37 @@
 package com.example.myapp;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ActionMode;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.content.ClipboardManager;
-import android.content.Context;
+
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.auth.oauth2.GoogleCredentials;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -49,42 +47,24 @@ import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.JsonToken;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
+public class AmericanArticlePractice extends AppApplication implements View.OnClickListener {
 
-public class DailyStudyPractice extends AppApplication implements View.OnClickListener {
+    private static final String TAG = "AmericanArticlePractice";
 
-    private static final String TAG = "DailyStudyPractice";
-    private String studyTopic;
-    private String imagePopUp;
-    private List<String> sentences;
+    private String[] scriptSentences; // 🔹 원문 문장 배열
+    private String[] translatedSentences; // 🔹 번역 문장 배열
+
     private int currentSentenceIndex = 0;
 
+    private TextView articleTitle;
     private TextView exampleInterpretation;
     private TextView exampleSentence;
-    private ImageView practiceImage;
     private LinearProgressIndicator progressBar;
     private GestureDetector gestureDetector;
-    int practice_mode;
+    private int articleNumber = 0;
     TextView practiceTitle = null;
     private Context context;
     String activeSentence = null;
@@ -94,9 +74,9 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_daily_study_practice);
+        setContentView(R.layout.activity_america_article_practice);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.daily_study_practice_activity), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.america_article_practice_activity), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -112,49 +92,35 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
 
     private void initializeClass() {
         Intent intent = getIntent();
-        studyTopic = intent.getStringExtra("study_topic");
-        imagePopUp = intent.getStringExtra("image_popup");
-        sentences = intent.getStringArrayListExtra("sentences");
-        practice_mode = intent.getIntExtra("mode", -1); // 기본값 -1
+        articleNumber = intent.getIntExtra("article_number", -1);
+        scriptSentences = intent.getStringArrayExtra("scriptSentences");
+        translatedSentences = intent.getStringArrayExtra("translatedSentences");
 
-        Log.d(TAG, "studyTopic: " + studyTopic);
-        Log.d(TAG, "imagePopUp: " + imagePopUp);
-        Log.d(TAG, "Selected Mode: " + practice_mode);
-
-        practiceTitle = findViewById(R.id.daily_study_practice_title);
-        exampleInterpretation = findViewById(R.id.example_interpretation);
-        exampleSentence = findViewById(R.id.example_sentence);
-        practiceImage = findViewById(R.id.daily_study_practice_image);
-        progressBar = findViewById(R.id.progress_bar);
-
-        practiceTitle.setOnClickListener(this);
-        exampleSentence.setOnClickListener(this);
-
-        // 4단원 일 경우의 이미지 설정
-        if ("no".equals(imagePopUp)) {
-            practiceImage.setVisibility(View.GONE);
-        } else {
-            int imageResId = getResources().getIdentifier(imagePopUp, "drawable", getPackageName());
-            if (imageResId != 0) {
-                practiceImage.setImageResource(imageResId);
-                practiceImage.setVisibility(View.VISIBLE);
-            } else {
-                Log.e(TAG, "Image not found for: " + imagePopUp);
-                practiceImage.setVisibility(View.GONE);
-            }
+        if (scriptSentences == null || scriptSentences.length == 0 || translatedSentences == null || translatedSentences.length == 0) {
+            Log.e(TAG, "❌ 받은 문장 데이터가 없음");
+            exampleInterpretation.setText("No sentences available.");
+            exampleSentence.setText("");
+            return;
         }
 
-        // 첫 번째 문장 표시
-        if (sentences != null && !sentences.isEmpty()) {
+        articleTitle = findViewById(R.id.america_article_practice_title);
+        exampleInterpretation = findViewById(R.id.america_article_example_interpretation);
+        exampleSentence = findViewById(R.id.america_article_example_sentence);
+        progressBar = findViewById(R.id.america_article_progress_bar);
+
+        exampleSentence.setOnClickListener(this);
+        exampleInterpretation.setOnClickListener(this);
+
+        String[] headlines = AppAmericaArticleApplication.getInstance().getHeadlines();
+        articleTitle.setText(headlines[articleNumber]);
+
+        // 🔹 첫 번째 문장 표시
+        if (scriptSentences != null && translatedSentences != null && scriptSentences.length > 0) {
             currentSentenceIndex = 0;
             updateSentenceView();
         } else {
             exampleInterpretation.setText("No sentences available.");
             exampleSentence.setText("");
-        }
-
-        if (practice_mode == 1) {
-            exampleSentence.setVisibility(View.GONE);
         }
 
         exampleSentence.setTextIsSelectable(true);
@@ -164,26 +130,18 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
 
     private void updateSentenceView() {
         Log.d(TAG, "updateSentenceView() 실행됨, 현재 문장 index: " + currentSentenceIndex);
-        if (sentences != null && currentSentenceIndex >= 0 && currentSentenceIndex < sentences.size()) {
-            String[] sentenceParts = sentences.get(currentSentenceIndex).split(" \\| ");
-            if (sentenceParts.length == 2) {
-                activeTranslate = sentenceParts[0];
-                activeSentence = sentenceParts[1];
-                exampleInterpretation.setText(sentenceParts[0]); // 한글 문장
-                exampleSentence.setText(sentenceParts[1]); // 영어 문장
-            } else {
-                exampleInterpretation.setText(sentences.get(currentSentenceIndex));
-                exampleSentence.setText("");
-            }
-
+        if (scriptSentences.length > currentSentenceIndex && translatedSentences.length > currentSentenceIndex) {
+            exampleInterpretation.setText(translatedSentences[currentSentenceIndex]); // 한글 번역
+            exampleSentence.setText(scriptSentences[currentSentenceIndex]); // 영어 원문
+        }
             // ProgressBar 업데이트
             updateProgressBar();
-        }
+
     }
 
     private void updateProgressBar() {
-        if (progressBar != null && sentences != null && !sentences.isEmpty()) {
-            int progress = (int) (((float) (currentSentenceIndex + 1) / sentences.size()) * 100);
+        if (progressBar != null && scriptSentences.length > 0) {
+            int progress = (int) (((float) (currentSentenceIndex + 1) / scriptSentences.length) * 100);
             progressBar.setProgress(progress);
             Log.d(TAG, "ProgressBar updated: " + progress + "%");
         }
@@ -191,15 +149,14 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.example_sentence) {
+        if (v.getId() == R.id.america_article_example_interpretation) {
+            Log.e(TAG, "TTS Touch");
             String textToRead = exampleSentence.getText().toString();
             if (!textToRead.isEmpty()) {
                 AppTTSPlayer.getInstance(this).speak(textToRead);
             } else {
                 Log.e(TAG, "No text to read.");
             }
-        } else if(v.getId() == R.id.daily_study_practice_title) {
-            exampleSentence.setVisibility(View.VISIBLE);
         }
     }
 
@@ -208,28 +165,22 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                if (sentences == null || sentences.isEmpty()) {
+                if (scriptSentences == null || scriptSentences.length == 0) {
                     Log.e(TAG, "No sentences available.");
                     return false;
                 }
 
                 if (e1.getX() - e2.getX() > 100) {
                     // 왼쪽으로 스와이프 (다음 문장)
-                    if (currentSentenceIndex < sentences.size() - 1) {
+                    if (currentSentenceIndex < scriptSentences.length - 1) {
                         currentSentenceIndex++;
                         updateSentenceView();
-                        if (practice_mode == 1) {
-                            exampleSentence.setVisibility(View.GONE);
-                        }
                     }
                 } else if (e2.getX() - e1.getX() > 100) {
                     // 오른쪽으로 스와이프 (이전 문장)
                     if (currentSentenceIndex > 0) {
                         currentSentenceIndex--;
                         updateSentenceView();
-                        if (practice_mode == 1) {
-                            exampleSentence.setVisibility(View.GONE);
-                        }
                     }
                 }
                 return super.onFling(e1, e2, velocityX, velocityY);
@@ -317,17 +268,13 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
         // 다이얼로그 내부 뷰 찾기
         TextView englishWordTextView = dialog.findViewById(R.id.dialog_english_word);
         TextView koreanWordTextView = dialog.findViewById(R.id.dialog_korean_word);
-        Button btnSave = dialog.findViewById(R.id.btn_study); // Save 버튼
         Button btnOk = dialog.findViewById(R.id.btn_test);
+        Button btnSave = dialog.findViewById(R.id.btn_study);
+        btnSave.setVisibility(View.GONE);
 
         // 단어 데이터 설정
         englishWordTextView.setText(word);
         koreanWordTextView.setText(definition);
-
-        btnSave.setOnClickListener(v -> {
-            saveWordToExcel(studyTopic, definition, word, activeTranslate, activeSentence);
-            dialog.dismiss();
-        });
 
         // "OK" 버튼 클릭 시 다이얼로그 닫기
         btnOk.setOnClickListener(v -> dialog.dismiss());
@@ -436,24 +383,18 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
     @Override
     protected void onNextPressed() {
         Log.d(TAG, "onNextPressed() 실행됨, currentSentenceIndex: " + currentSentenceIndex);
-        if (sentences != null && currentSentenceIndex < sentences.size() - 1) {
+        if (scriptSentences != null && currentSentenceIndex < scriptSentences.length - 1) {
             currentSentenceIndex++;
             updateSentenceView();
-            if (practice_mode == 1) {
-                exampleSentence.setVisibility(View.GONE);
-            }
         }
     }
 
     @Override
     protected void onPreviousPressed() {
         Log.d(TAG, "onPreviousPressed() 실행됨, currentSentenceIndex: " + currentSentenceIndex);
-        if (sentences != null && currentSentenceIndex > 0) {
+        if (scriptSentences != null && currentSentenceIndex > 0) {
             currentSentenceIndex--;
             updateSentenceView();
-            if (practice_mode == 1) {
-                exampleSentence.setVisibility(View.GONE);
-            }
         }
     }
 

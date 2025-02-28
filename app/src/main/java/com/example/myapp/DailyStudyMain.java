@@ -34,7 +34,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class DailyStudyMain extends AppApplication implements View.OnClickListener{
 
-    private static final String TAG = "DailyStudyPage";
+    private static final String TAG = "DailyStudyMain";
     private RecyclerView recyclerView;
     private AppMenuAdapter menuAdapter;
     private List<AppMenuItem> currentMenuItems;
@@ -47,7 +47,7 @@ public class DailyStudyMain extends AppApplication implements View.OnClickListen
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_daily_study_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.daily_study_page_activity), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.daily_study_main_activity), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
