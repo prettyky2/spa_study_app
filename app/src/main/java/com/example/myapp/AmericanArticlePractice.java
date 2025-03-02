@@ -69,6 +69,8 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
     private Context context;
     String activeSentence = null;
     String activeTranslate = null;
+    private AppTTSPlayer ttsPlayer;
+    private Dialog translationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
         });
 
         context = this;
+        ttsPlayer = AppTTSPlayer.getInstance(this);
 
         initializeClass();
         swipeListener();
@@ -150,7 +153,7 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.america_article_example_interpretation) {
-            Log.e(TAG, "TTS Touch");
+            Log.d(TAG, "TTS Touch");
             String textToRead = exampleSentence.getText().toString();
             if (!textToRead.isEmpty()) {
                 AppTTSPlayer.getInstance(this).speak(textToRead);
@@ -174,12 +177,14 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
                     // 왼쪽으로 스와이프 (다음 문장)
                     if (currentSentenceIndex < scriptSentences.length - 1) {
                         currentSentenceIndex++;
+                        ttsPlayer.stop();
                         updateSentenceView();
                     }
                 } else if (e2.getX() - e1.getX() > 100) {
                     // 오른쪽으로 스와이프 (이전 문장)
                     if (currentSentenceIndex > 0) {
                         currentSentenceIndex--;
+                        ttsPlayer.stop();
                         updateSentenceView();
                     }
                 }
@@ -345,9 +350,6 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
                             return true;
                         }
                         fetchTranslatedWord(selectedText); // 번역 실행
-
-
-                        fetchTranslatedWord(selectedText); // 기존 fetchWordDefinition 대신 번역 함수 호출
                     } else {
                         Log.e(TAG, "No word selected (onDestroyActionMode).");
                     }
@@ -385,6 +387,8 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
         Log.d(TAG, "onNextPressed() 실행됨, currentSentenceIndex: " + currentSentenceIndex);
         if (scriptSentences != null && currentSentenceIndex < scriptSentences.length - 1) {
             currentSentenceIndex++;
+            ttsPlayer = AppTTSPlayer.getInstance(this);
+            ttsPlayer.stop();
             updateSentenceView();
         }
     }
@@ -394,7 +398,21 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
         Log.d(TAG, "onPreviousPressed() 실행됨, currentSentenceIndex: " + currentSentenceIndex);
         if (scriptSentences != null && currentSentenceIndex > 0) {
             currentSentenceIndex--;
+            ttsPlayer = AppTTSPlayer.getInstance(this);
+            ttsPlayer.stop();
             updateSentenceView();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // 🔹 TTS가 재생 중이라면 중지
+        ttsPlayer = AppTTSPlayer.getInstance(this);
+        if (ttsPlayer != null) {
+            Log.d(TAG, "📢 Activity 포커스 사라짐 → TTS 중지");
+            ttsPlayer.stop();
         }
     }
 

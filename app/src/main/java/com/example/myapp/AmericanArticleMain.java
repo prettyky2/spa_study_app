@@ -1,6 +1,7 @@
 package com.example.myapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -224,6 +225,15 @@ public class AmericanArticleMain extends AppApplication implements View.OnClickL
             isPlaying = false;
             AudioPlayButton.setText("Play");
         } else {
+            // 🔹 속도 값을 SharedPreferences에서 가져와 설정
+            SharedPreferences prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
+            float playbackSpeed = prefs.getFloat("tts_speed", 1.0f); // 기본값 1.0
+
+            // 🔹 API 23 이상에서만 속도 조절 적용
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+            }
+
             mediaPlayer.seekTo(lastPlaybackPosition); // 🔹 저장된 위치부터 재생
             mediaPlayer.start();
             isPlaying = true;

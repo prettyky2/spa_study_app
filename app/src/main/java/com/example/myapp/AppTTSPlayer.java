@@ -34,6 +34,7 @@ public class AppTTSPlayer {
     private TextToSpeechClient textToSpeechClient;
     private Context context;
     private double TTSAudioSpeed = 1.0; // 기본값 1.0
+    private AudioTrack audioTrack; // 🔹 오디오 트랙 객체 추가
 
 
     // Singleton private constructor
@@ -155,6 +156,7 @@ public class AppTTSPlayer {
                     .setOnAudioFocusChangeListener(focusChange -> {
                         if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                             Log.d(TAG, "Audio Focus Lost - Stopping playback");
+                            stop();
                         }
                     })
                     .build();
@@ -204,14 +206,24 @@ public class AppTTSPlayer {
                 audioData = finalAudioData; // 🔹 변경된 데이터 사용
             }
 
+            // 🔹 기존 AudioTrack 정리 후 새로 생성
+            if (audioTrack != null) {
+                Log.d(TAG, "🔄 기존 audioTrack이 존재 → 먼저 중지");
+                audioTrack.pause();
+                audioTrack.flush();
+                audioTrack.stop();
+                audioTrack.release();
+                audioTrack = null;
+            }
+
             // 🔹 AudioTrack 설정 변경 (MODE_STREAM으로 변경)
-            AudioTrack audioTrack = new AudioTrack(
-                    AudioManager.STREAM_MUSIC,
-                    24000, // 샘플 레이트
-                    AudioFormat.CHANNEL_OUT_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT,
-                    audioData.length,
-                    AudioTrack.MODE_STREAM // 🔹 MODE_STATIC → MODE_STREAM 변경
+             audioTrack = new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                24000, // 샘플 레이트
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                audioData.length,
+                AudioTrack.MODE_STREAM // 🔹 MODE_STATIC → MODE_STREAM 변경
             );
 
             // 실제 오디오 데이터를 작성
@@ -227,6 +239,40 @@ public class AppTTSPlayer {
     public void setTTSAudioSpeed(double speed) {
         TTSAudioSpeed = speed;
     }
+
+    public void stop() {
+        if (audioTrack != null) {
+            try {
+                Log.d(TAG, "📢 TTS 강제 중지 시도");
+
+                // 🔹 오디오 중지 및 리소스 해제
+                audioTrack.pause();
+                audioTrack.flush();  // 🔹 현재 버퍼 비우기
+                audioTrack.stop();
+                audioTrack.release();
+                audioTrack = null;
+
+                Log.d(TAG, "✅ 오디오 트랙 정리 완료");
+            } catch (Exception e) {
+                Log.e(TAG, "❌ TTS 중지 중 오류 발생: " + e.getMessage());
+            }
+        } else {
+            Log.w(TAG, "⚠ audioTrack이 null, 이미 중지된 상태일 가능성");
+        }
+
+        if (textToSpeechClient != null) {
+            try {
+                Log.d(TAG, "📢 TTS 클라이언트 종료 시도");
+                textToSpeechClient.close(); // 🔹 먼저 닫기
+                textToSpeechClient.shutdown();  // 🔹 그 후 종료
+                textToSpeechClient = null;
+                Log.d(TAG, "✅ TTS 클라이언트 종료 완료");
+            } catch (Exception e) {
+                Log.e(TAG, "❌ TTS 클라이언트 종료 실패: " + e.getMessage());
+            }
+        }
+    }
+
 
 }
 

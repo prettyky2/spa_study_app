@@ -19,12 +19,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import com.example.myapp.AmericanArticleMain;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 public class AmericanArticleTitle extends AppApplication implements View.OnClickListener {
 
     public static final String TAG = "AmericanArticleTitle";
-    private TextView article_1, article_2, article_3, article_4, article_5, article_6, article_7, article_8, article_9, article_10;
-
+    private TextView article_1, article_2, article_3, article_4, article_5, article_6, article_7, article_8, article_9, article_10, progress_percent;
+    private LinearProgressIndicator progressBar_1, progressBar_2;
 
     // 🔹 현재 표시되는 뉴스 타입 (true = 정치, false = 기술)
 
@@ -57,12 +58,25 @@ public class AmericanArticleTitle extends AppApplication implements View.OnClick
                 loading_background.setVisibility(View.GONE);
                 loadingProgress.setVisibility(View.GONE);
                 updateArticlesDisplay();
+            } else if ("com.example.myapp.PROGRESS_UPDATE".equals(intent.getAction())) {
+                int progress = intent.getIntExtra("progress", 0);
+                progressBar_1.setProgress(progress);
+                progressBar_2.setProgress(progress);
+                progress_percent.setText(progress + "%");
+                Log.d(TAG, "📢 Progress Received: " + progress + "%");
+                if(progress == 100) {
+                    progressBar_1.setVisibility(View.GONE);
+                    progressBar_2.setVisibility(View.GONE);
+                    progress_percent.setVisibility(View.GONE);
+                }
             }
         }
     };
 
     private void initializeClass() {
-        IntentFilter filter = new IntentFilter("com.example.myapp.MP3_DOWNLOAD_COMPLETED");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.example.myapp.MP3_DOWNLOAD_COMPLETED");
+        filter.addAction("com.example.myapp.PROGRESS_UPDATE");
         registerReceiver(mp3DownloadCompletionReceiver, filter, Context.RECEIVER_EXPORTED);
 
         //initialize object
@@ -78,6 +92,10 @@ public class AmericanArticleTitle extends AppApplication implements View.OnClick
         article_10 = findViewById(R.id.article_10);
         loadingProgress = findViewById(R.id.loading_progress);
         loading_background = findViewById(R.id.loading_background);
+        progressBar_1 = findViewById(R.id.america_article_progress_bar_1);
+        progressBar_2 = findViewById(R.id.america_article_progress_bar_2);
+        progress_percent = findViewById(R.id.progress_bar_percent);
+
 
         // 버튼 클릭 리스너 설정
         article_1.setOnClickListener(this);
@@ -92,8 +110,14 @@ public class AmericanArticleTitle extends AppApplication implements View.OnClick
         article_10.setOnClickListener(this);
 
         if(AppAmericaArticleApplication.getInstance().AmericaHeadlineCrawlingDone == 1) {
+            progressBar_1.setProgress(100);
+            progressBar_2.setProgress(100);
+            progress_percent.setText("100%");
             loading_background.setVisibility(View.GONE);
             loadingProgress.setVisibility(View.GONE);
+            progressBar_1.setVisibility(View.GONE);
+            progressBar_2.setVisibility(View.GONE);
+            progress_percent.setVisibility(View.GONE);
             updateArticlesDisplay();
         }
     } //initializeClass()

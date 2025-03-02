@@ -89,6 +89,7 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
     private Context context;
     String activeSentence = null;
     String activeTranslate = null;
+    private AppTTSPlayer ttsPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
         });
 
         context = this;
+        ttsPlayer = AppTTSPlayer.getInstance(this);
 
         initializeClass();
         swipeListener();
@@ -159,7 +161,6 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
 
         exampleSentence.setTextIsSelectable(true);
         enableTextSelection();
-
     }
 
     private void updateSentenceView() {
@@ -217,6 +218,7 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
                     // 왼쪽으로 스와이프 (다음 문장)
                     if (currentSentenceIndex < sentences.size() - 1) {
                         currentSentenceIndex++;
+                        ttsPlayer.stop();
                         updateSentenceView();
                         if (practice_mode == 1) {
                             exampleSentence.setVisibility(View.GONE);
@@ -226,6 +228,7 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
                     // 오른쪽으로 스와이프 (이전 문장)
                     if (currentSentenceIndex > 0) {
                         currentSentenceIndex--;
+                        ttsPlayer.stop();
                         updateSentenceView();
                         if (practice_mode == 1) {
                             exampleSentence.setVisibility(View.GONE);
@@ -398,9 +401,6 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
                             return true;
                         }
                         fetchTranslatedWord(selectedText); // 번역 실행
-
-
-                        fetchTranslatedWord(selectedText); // 기존 fetchWordDefinition 대신 번역 함수 호출
                     } else {
                         Log.e(TAG, "No word selected (onDestroyActionMode).");
                     }
@@ -438,6 +438,8 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
         Log.d(TAG, "onNextPressed() 실행됨, currentSentenceIndex: " + currentSentenceIndex);
         if (sentences != null && currentSentenceIndex < sentences.size() - 1) {
             currentSentenceIndex++;
+            ttsPlayer = AppTTSPlayer.getInstance(this);
+            ttsPlayer.stop();
             updateSentenceView();
             if (practice_mode == 1) {
                 exampleSentence.setVisibility(View.GONE);
@@ -450,10 +452,24 @@ public class DailyStudyPractice extends AppApplication implements View.OnClickLi
         Log.d(TAG, "onPreviousPressed() 실행됨, currentSentenceIndex: " + currentSentenceIndex);
         if (sentences != null && currentSentenceIndex > 0) {
             currentSentenceIndex--;
+            ttsPlayer = AppTTSPlayer.getInstance(this);
+            ttsPlayer.stop();
             updateSentenceView();
             if (practice_mode == 1) {
                 exampleSentence.setVisibility(View.GONE);
             }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // 🔹 TTS가 재생 중이라면 중지
+        ttsPlayer = AppTTSPlayer.getInstance(this);
+        if (ttsPlayer != null) {
+            Log.d(TAG, "📢 Activity 포커스 사라짐 → TTS 중지");
+            ttsPlayer.stop();
         }
     }
 

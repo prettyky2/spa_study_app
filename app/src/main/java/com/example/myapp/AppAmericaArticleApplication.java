@@ -49,7 +49,8 @@ public class AppAmericaArticleApplication extends Application {
     public static AppAmericaArticleApplication getInstance() {
         return instance;
     }
-
+    private static final int TOTAL_ITEMS = 30;
+    private int progressCounter = 0;
 
     @Override
     public void onCreate() {
@@ -229,12 +230,14 @@ public class AppAmericaArticleApplication extends Application {
             // 2️⃣ 파일 저장 (null 체크 후 저장)
             if (transcripts[index] != null) {
                 saveToFile("article_" + index + ".txt", transcripts[index]);
+                updateProgress(); // ✅ 번역 저장 후 프로그래스바 업데이트
             }
 
             // 3️⃣ 🔹 Google Translate 웹사이트를 이용해 번역 후 저장
             if (transcripts[index] != null && !transcripts[index].equals("Transcript not available.")) {
                 String translatedText = translateUsingGoogle(transcripts[index]);
                 saveToFile("article_" + index + "_translated.txt", translatedText);
+                updateProgress(); // ✅ 번역 저장 후 프로그래스바 업데이트
             }
 
             // 3️⃣ MP3 가져오기
@@ -412,7 +415,7 @@ public class AppAmericaArticleApplication extends Application {
             }
 
             mp3DownloadCount++; // ✅ 성공한 MP3 개수 증가
-
+            updateProgress(); // ✅ 번역 저장 후 프로그래스바 업데이트
             // 🔹 모든 MP3 다운로드 완료 시 `sendMp3DownloadCompleteBroadcast()` 호출
             if (mp3DownloadCount >= 10) {
                 sendMp3DownloadCompleteBroadcast();
@@ -440,7 +443,16 @@ public class AppAmericaArticleApplication extends Application {
         sendBroadcast(intent);
     }
 
+    private void updateProgress() {
+        progressCounter++;
+        int progress = (progressCounter * 100) / TOTAL_ITEMS; // 100% 기준으로 변환
 
+        Intent intent = new Intent("com.example.myapp.PROGRESS_UPDATE");
+        intent.putExtra("progress", progress);
+        sendBroadcast(intent);
+
+        Log.d(TAG, "📢 Progress Updated: " + progress + "%");
+    }
 
 
 
