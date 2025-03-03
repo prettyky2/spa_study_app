@@ -342,7 +342,7 @@ public class AmericanArticlePractice extends AppApplication implements View.OnCl
                         String selectedText = exampleSentence.getText().subSequence(startSelection, endSelection).toString().trim();
                         Log.d(TAG, "Selected text (onDestroyActionMode): " + selectedText);
                         // 🔹 단어 길이 검사 (15자 이상이면 번역 거부)
-                        if (selectedText.length() > 15) {
+                        if (selectedText.length() > 20) {
                             runOnUiThread(() ->
                                     Toast.makeText(exampleSentence.getContext(), "15자 이상 번역 불가", Toast.LENGTH_SHORT).show()
                             );

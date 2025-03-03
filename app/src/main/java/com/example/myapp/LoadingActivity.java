@@ -52,9 +52,7 @@ public class LoadingActivity extends AppApplication implements View.OnClickListe
         }); //setContentView
 
         initializeClass(); //set button, text, progress bar, onClickListener etc
-
-        // 🔹 블루투스 권한 요청 추가 (Android 12 이상)
-        requestBluetoothPermission();
+        requestBluetoothPermission(); // 🔹 블루투스 권한 요청 추가 (Android 12 이상)
         requestMicrophonePermission(); // 🔹 마이크 권한 요청 추가
         copyExcelFileToInternalStorage();
 

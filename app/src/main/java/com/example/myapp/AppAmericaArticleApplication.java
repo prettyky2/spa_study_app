@@ -1,8 +1,10 @@
 package com.example.myapp;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
 import org.jsoup.Connection;
@@ -16,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileOutputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import android.content.SharedPreferences;
@@ -51,21 +54,92 @@ public class AppAmericaArticleApplication extends Application {
     }
     private static final int TOTAL_ITEMS = 30;
     private int progressCounter = 0;
+    private static final long SESSION_TIMEOUT = 1800000; // 1시간 (3600000ms)
+    private FetchArticlesTask fetchArticlesTask;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         instance = this;
+        initializeSessionTimeout(); // ✅ 세션 초기화
 
-        // 🔹 기존 저장된 기사 제목 가져오기
-        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        String savedFirstTitle = prefs.getString("first_article_title", "");
-        boolean downloadCompleted = prefs.getBoolean("download_completed", false);
-        boolean scriptDownloadCompleted = prefs.getBoolean("script_download_completed", false);
 
-        new FetchArticlesTask(savedFirstTitle, downloadCompleted, scriptDownloadCompleted).execute();
+        // 중복 실행 방지: 이미 AsyncTask가 실행 중이면 새로 시작하지 않음
+        if (fetchArticlesTask == null || fetchArticlesTask.getStatus() == AsyncTask.Status.FINISHED) {
+            SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+            String savedFirstTitle = prefs.getString("first_article_title", "");
+            boolean downloadCompleted = prefs.getBoolean("download_completed", false);
+            boolean scriptDownloadCompleted = prefs.getBoolean("script_download_completed", false);
+
+            fetchArticlesTask = new FetchArticlesTask(savedFirstTitle, downloadCompleted, scriptDownloadCompleted);
+            fetchArticlesTask.execute();
+        } else {
+            Log.d(TAG, "🔄 AsyncTask 이미 실행 중, 새로 시작하지 않습니다.");
+        }
+
+
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            private int startedActivities = 0; // 현재 포그라운드 액티비티 수
+
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                startedActivities++;
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                if (isSessionExpired()) {
+                    Log.d(TAG, "세션 만료: 앱을 재실행합니다.");
+                    resetSessionTimeout(); // ✅ 세션 만료 상태 초기화
+                    restartApp(activity); // 세션 만료 시 앱 재실행
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                saveCurrentTime(); // 마지막 사용 시간 저장
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                startedActivities--;
+                if (startedActivities == 0) {
+                    saveCurrentTime(); // 모든 액티비티가 종료된 경우
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {}
+        });
+
+
+//        // 🔹 기존 저장된 기사 제목 가져오기
+//        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+//        String savedFirstTitle = prefs.getString("first_article_title", "");
+//        boolean downloadCompleted = prefs.getBoolean("download_completed", false);
+//        boolean scriptDownloadCompleted = prefs.getBoolean("script_download_completed", false);
+//
+//        new FetchArticlesTask(savedFirstTitle, downloadCompleted, scriptDownloadCompleted).execute();
     }
+
+
+    private void initializeSessionTimeout() {
+        SharedPreferences prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        long lastTime = prefs.getLong("last_time", -1); // -1은 저장된 값이 없음을 의미
+        if (lastTime == -1) {
+            Log.d(TAG, "🔹 앱 첫 실행: 세션 만료 시간을 초기화합니다.");
+            resetSessionTimeout(); // 초기화 시 현재 시간을 저장
+        }
+    }
+
 
     // 🔹 새로운 메서드: 이미지 다운로드 후 내부 저장소에 저장
     private void downloadImage(String imageUrl, String fileName) {
@@ -118,8 +192,19 @@ public class AppAmericaArticleApplication extends Application {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+                // 1. 네트워크 작업 전 취소 확인
+                if (isCancelled()) {
+                    Log.d(TAG, "🛑 AsyncTask가 취소된 상태입니다. 작업을 중단합니다.");
+                    return null;
+                }
+
                 // 1️⃣ NPR 메인 페이지에서 기사 리스트 가져오기
-                Document doc = Jsoup.connect("https://www.npr.org/programs/morning-edition/").get();
+                Document doc = Jsoup.connect("https://www.npr.org/programs/morning-edition/")
+                                    .timeout(30000) // 👉 타임아웃을 30초로 설정
+                                    .ignoreHttpErrors(true) // HTTP 오류를 무시
+                                    .get();
+                if (isCancelled()) return null;
+
                 Elements articles = doc.select("h3.rundown-segment__title a");
 
                 int count = 0;
@@ -159,8 +244,14 @@ public class AppAmericaArticleApplication extends Application {
                     editor.putString("first_article_title", newFirstTitle);
                     editor.apply();
                 }
+            } catch (SocketTimeoutException e) {
+                Log.e(TAG, "⏰ 네트워크 요청 타임아웃 발생", e);
             } catch (IOException e) {
-                Log.e(TAG, "❌ Error fetching article list", e);
+                if (isCancelled()) {
+                    Log.d(TAG, "🛑 AsyncTask 강제 종료로 인한 네트워크 오류 발생 (IOException)");
+                } else {
+                    Log.e(TAG, "❌ Error fetching article list (Ask Gemini)", e);
+                }
             }
             return null;
         }
@@ -213,7 +304,6 @@ public class AppAmericaArticleApplication extends Application {
 
 
      //🔹 개별 기사 상세 페이지에서 스크립트 & MP3 URL 가져오기
-
     private void fetchArticleDetails(int index) {
         try {
             Document articleDoc = Jsoup.connect(articleUrls[index]).get();
@@ -261,7 +351,6 @@ public class AppAmericaArticleApplication extends Application {
             Log.e(TAG, "❌ Error fetching article details", e);
         }
     }
-
 
     //🔹 Google Translate 웹사이트를 이용해 문장을 번역
     private String translateUsingGoogle(String text) {
@@ -371,6 +460,11 @@ public class AppAmericaArticleApplication extends Application {
     private void downloadMp3(String mp3Url, String fileName) {
         File mp3File = new File(getFilesDir(), fileName);
 
+        if (isFileAlreadyDownloaded(fileName)) {
+            Log.d(TAG, "✅ 이미 다운로드된 MP3 파일: " + fileName);
+            return;
+        }
+
         // ✅ 기존에 존재하는 잘못된 파일 삭제 후 새로 다운로드
         if (mp3File.exists() && mp3File.length() < 1024 * 10) { // 10KB 미만이면 손상된 파일로 간주
             mp3File.delete();
@@ -426,9 +520,8 @@ public class AppAmericaArticleApplication extends Application {
         }
     }
 
-    /**
-     * 🔹 MP3 다운로드가 모두 완료되었을 때 브로드캐스트 전송
-     */
+
+     // 🔹 MP3 다운로드가 모두 완료되었을 때 브로드캐스트 전송
     private void sendMp3DownloadCompleteBroadcast() {
         Log.d(TAG, "📢 모든 MP3 다운로드 완료, Broadcast 전송!");
         AmericaHeadlineCrawlingDone = 1;
@@ -455,13 +548,58 @@ public class AppAmericaArticleApplication extends Application {
     }
 
 
+    /**
+     * 세션 만료 여부 확인
+     */
+    private boolean isSessionExpired() {
+        SharedPreferences prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        long lastTime = prefs.getLong("last_time", 0);
+        long currentTime = System.currentTimeMillis();
+        return (currentTime - lastTime > SESSION_TIMEOUT);
+    }
+
+    /**
+     * 현재 시간을 SharedPreferences에 저장
+     */
+    private void saveCurrentTime() {
+        SharedPreferences prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("last_time", System.currentTimeMillis());
+        editor.apply();
+    }
+
+    /**
+     * 앱을 재실행하는 메서드 (기존의 restartApp 메서드 활용)
+     */
+    private void restartApp(Activity activity) {
+        if (fetchArticlesTask != null && fetchArticlesTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchArticlesTask.cancel(true); // 기존 작업 중지
+            Log.d(TAG, "🛑 AsyncTask 강제 종료");
+        }
+
+        Intent intent = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+        }
+        // ✅ 강제 종료 대신 세션 초기화 후 안전하게 초기화
+        resetSessionTimeout(); // 세션 만료 초기화
+    }
+
+    // ✅ 세션 만료 초기화 메서드 추가
+    private void resetSessionTimeout() {
+        SharedPreferences prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("last_time", System.currentTimeMillis());
+        editor.apply();
+    }
 
 
-
-
-
-
-
+    private boolean isFileAlreadyDownloaded(String fileName) {
+        File file = new File(getFilesDir(), fileName);
+        return file.exists() && file.length() > 1024; // 파일이 존재하고 크기가 정상일 때
+    }
 
 
 

@@ -284,8 +284,8 @@ public class AmericanArticleMain extends AppApplication implements View.OnClickL
                         String selectedText = textView.getText().subSequence(startSelection, endSelection).toString().trim();
                         Log.d(TAG, "Selected text: " + selectedText);
 
-                        // 🔹 단어 길이 검사 (15자 이상이면 번역 거부)
-                        if (selectedText.length() > 15) {
+                        // 🔹 단어 길이 검사 (20자 이상이면 번역 거부)
+                        if (selectedText.length() > 20) {
                             runOnUiThread(() ->
                                     Toast.makeText(textView.getContext(), "15자 이상 번역 불가", Toast.LENGTH_SHORT).show()
                             );

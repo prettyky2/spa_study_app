@@ -231,5 +231,6 @@
     <string name="article_stop">Stop</string>
     <string name="article_translate_korea">번역</string>
     <string name="article_translate_english">Translate</string>
+    <string name="article_title_loading">Loading...</string>
 
 </resources>

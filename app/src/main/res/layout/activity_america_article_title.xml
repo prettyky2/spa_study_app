@@ -196,7 +196,7 @@
         android:id="@+id/progress_bar_percent"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="@string/article_title_initialize"
+        android:text="@string/article_title_loading"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
